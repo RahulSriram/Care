@@ -19,10 +19,10 @@
         app:backgroundTint="#3f51b4"
         app:fabSize="normal"
         app:layout_anchor="@id/relative_layout"
-        app:layout_anchorGravity="right|bottom"
+        app:layout_anchorGravity="end|bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin"
         android:layout_alignParentEnd="true" />
 </RelativeLayout>

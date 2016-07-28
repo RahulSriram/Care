@@ -13,7 +13,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_gravity="right|bottom"
+        android:layout_gravity="end|bottom"
         tools:context="tech.rahulsriram.care.MapsActivity"
         android:layout_alignParentTop="true" />
 
