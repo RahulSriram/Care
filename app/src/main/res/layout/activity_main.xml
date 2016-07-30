@@ -22,7 +22,7 @@
         app:layout_anchorGravity="end|bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginBottom="@dimen/fab_margin" />
 </RelativeLayout>

@@ -4,10 +4,13 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 
 import android.location.LocationListener;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -28,8 +31,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Add a marker and move the camera
         LatLng currentLocation = new LatLng(lat, lon);
         Log.i("tech.rahulsriram.care.Location", currentLocation.toString());
-        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Your Location"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 18.0f));
+        mMap.setMyLocationEnabled(true);
     }
 
     @Override
@@ -63,6 +66,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LatLng currentLocation = new LatLng(lat, lon);
+                Toast.makeText(getApplicationContext(), currentLocation.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     /**
