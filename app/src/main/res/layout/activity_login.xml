@@ -14,18 +14,17 @@
         android:layout_height="wrap_content"
         android:inputType="phone"
         android:ems="10"
-        android:id="@+id/mn"
-        android:layout_marginTop="168dp"
+        android:id="@+id/mobileNumberInput"
         android:hint="@string/mobileNumberInput"
-        android:layout_alignParentTop="true"
+        android:layout_marginBottom="77dp"
+        android:layout_above="@+id/loginButton"
         android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/loginButton"
-        android:id="@+id/Login"
-        android:layout_marginTop="68dp"
-        android:layout_below="@+id/mn"
+        android:id="@+id/loginButton"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
 </RelativeLayout>
