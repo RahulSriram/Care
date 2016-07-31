@@ -1,13 +1,10 @@
 package tech.rahulsriram.care;
 
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 
-import android.telecom.Connection;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -21,23 +18,25 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationButtonClickListener;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.location.LocationListener;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ConnectionCallbacks, OnConnectionFailedListener, LocationListener {
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ConnectionCallbacks, OnConnectionFailedListener, LocationListener, LocationSource {
     String TAG = "tech.rahulsriram.care";
     private GoogleMap map;
     private Location lastKnownLocation;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
+    private LocationSource.OnLocationChangedListener mMapLocationListener = null;
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
-    private int UPDATE_INTERVAL = 10000; // 10 sec
-    private int FASTEST_INTERVAL = 5000; // 5 sec
     private int DISPLACEMENT = 10; // 10 meters
 
-    protected void buildGoogleApiClient() {
+    protected synchronized void buildGoogleApiClient() {
+        Log.i(TAG, "buildGoogleApiClient()");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -46,14 +45,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     protected void createLocationRequest() {
+        Log.i(TAG, "createLocationRequest()");
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        //mLocationRequest.setInterval(UPDATE_INTERVAL);
+        //mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
     protected boolean checkPlayServices() {
+        Log.i(TAG, "checkPlayServices()");
         int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
         if (result != ConnectionResult.SUCCESS) {
@@ -71,15 +72,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     protected void startLocationUpdates() {
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        Log.i(TAG, "startLocationUpdates()");
+        try {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        } catch (SecurityException e) {
+            Toast.makeText(getApplicationContext(),"Application needs Location Permissions to work", Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     protected void stopLocationUpdates() {
+        Log.i(TAG, "stopLocationUpdates()");
         LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate()");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -96,13 +105,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), lastKnownLocation.toString(), Toast.LENGTH_LONG).show();
+                String reply = "Couldn't get location. Please check if your GPS is on";
+                if(lastKnownLocation != null) {
+                    reply = lastKnownLocation.toString();
+                }
+
+                Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_LONG).show();
             }
         });
     }
 
     @Override
     protected void onStart() {
+        Log.i(TAG, "onStart()");
         super.onStart();
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
@@ -111,6 +126,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onResume() {
+        Log.i(TAG, "onResume()");
         super.onResume();
         checkPlayServices();
         if (mGoogleApiClient.isConnected()) {
@@ -120,6 +136,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onStop() {
+        Log.i(TAG, "onStop()");
         super.onStop();
         if (mGoogleApiClient.isConnected()) {
             mGoogleApiClient.disconnect();
@@ -128,19 +145,23 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onPause() {
+        Log.i(TAG, "onPause()");
         super.onPause();
         stopLocationUpdates();
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        lastKnownLocation = location;
-
-        if (lastKnownLocation != null) {
+        Log.i(TAG, "onLocationChanged()");
+        if (location != null && location.hasAccuracy() && location.getAccuracy() < 50) {
+            lastKnownLocation = location;
+            if (mMapLocationListener != null) {
+                mMapLocationListener.onLocationChanged(lastKnownLocation);
+            }
             Log.i(TAG, lastKnownLocation.toString());
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), (float) 17.5));
         } else {
-            Toast.makeText(getApplicationContext(), "Couldn't Location", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Couldn't get location. Please check if your GPS is on", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -155,26 +176,39 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.i(TAG, "onMapReady()");
         map = googleMap;
-        //lastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        //onLocationChanged(lastKnownLocation);
+        map.setLocationSource(this);
         map.setMyLocationEnabled(true);
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
+        Log.i(TAG, "onConnectionFailed()");
         Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
     }
 
     @Override
     public void onConnected(Bundle bundle) {
-        lastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        onLocationChanged(lastKnownLocation);
+        Log.i(TAG, "onConnected()");
         startLocationUpdates();
     }
 
     @Override
     public void onConnectionSuspended(int arg) {
+        Log.i(TAG, "onConnectionSuspended()");
         mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+        Log.i(TAG, "activate()");
+        mMapLocationListener = onLocationChangedListener;
+    }
+
+    @Override
+    public void deactivate() {
+        Log.i(TAG, "deactivate()");
+        mMapLocationListener = null;
     }
 }
