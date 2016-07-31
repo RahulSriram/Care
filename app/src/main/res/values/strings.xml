@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Care</string>
-    <string name="title_activity_maps">Care</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="login">Login</string>
     <string name="mobileNumberInput">Enter Mobile Number</string>
