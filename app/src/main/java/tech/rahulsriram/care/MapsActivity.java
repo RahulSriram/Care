@@ -50,7 +50,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setInterval(10000);
         mLocationRequest.setFastestInterval(5000);
-        //mLocationRequest.setSmallestDisplacement(10);
+        mLocationRequest.setSmallestDisplacement(10);
     }
 
     protected boolean checkPlayServices() {
