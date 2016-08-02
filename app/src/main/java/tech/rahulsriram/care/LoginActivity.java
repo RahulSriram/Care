@@ -23,7 +23,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "Number: " + mobileNumber.getText().toString(), Toast.LENGTH_LONG).show();
                 Intent callMapsActivity = new Intent(LoginActivity.this, MapsActivity.class);
-                LoginActivity.this.startActivity(callMapsActivity);
+                startActivity(callMapsActivity);
+                finish();
             }
         });
     }

@@ -25,15 +25,15 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.location.LocationListener;
 
-public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, ConnectionCallbacks, OnConnectionFailedListener, LocationListener, LocationSource {
-    String TAG = "tech.rahulsriram.care";
+public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, ConnectionCallbacks, OnConnectionFailedListener, LocationListener, LocationSource {
+    String TAG = "tech.rahulsriram.care.logger";
     private GoogleMap map;
     private Location lastKnownLocation;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private LocationSource.OnLocationChangedListener mMapLocationListener = null;
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
-    private int DISPLACEMENT = 10; // 10 meters
+    private String LOCATION_UNAVAILABLE_MSG = "Couldn't get location. Please check if your GPS is on";
+    private String LOCATION_PERMISSION_UNAVAILABLE_MSG = "Application needs Location Permissions to work";
 
     protected synchronized void buildGoogleApiClient() {
         Log.i(TAG, "buildGoogleApiClient()");
@@ -47,14 +47,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     protected void createLocationRequest() {
         Log.i(TAG, "createLocationRequest()");
         mLocationRequest = new LocationRequest();
-        //mLocationRequest.setInterval(UPDATE_INTERVAL);
-        //mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        //mLocationRequest.setSmallestDisplacement(10);
     }
 
     protected boolean checkPlayServices() {
         Log.i(TAG, "checkPlayServices()");
+        int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
         int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
 
         if (result != ConnectionResult.SUCCESS) {
@@ -76,7 +77,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         try {
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
         } catch (SecurityException e) {
-            Toast.makeText(getApplicationContext(),"Application needs Location Permissions to work", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), LOCATION_PERMISSION_UNAVAILABLE_MSG, Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -105,7 +106,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String reply = "Couldn't get location. Please check if your GPS is on";
+                Log.i(TAG, "fab.setOnClickListener()");
+                String reply = LOCATION_UNAVAILABLE_MSG;
                 if(lastKnownLocation != null) {
                     reply = lastKnownLocation.toString();
                 }
@@ -153,15 +155,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         Log.i(TAG, "onLocationChanged()");
-        if (location != null && location.hasAccuracy() && location.getAccuracy() < 50) {
-            lastKnownLocation = location;
-            if (mMapLocationListener != null) {
-                mMapLocationListener.onLocationChanged(lastKnownLocation);
+
+        if (location != null) {
+            if (location.hasAccuracy() && location.getAccuracy() < 30) {
+                lastKnownLocation = location;
+                if (mMapLocationListener != null) {
+                    mMapLocationListener.onLocationChanged(lastKnownLocation);
+                }
+
+                Log.i(TAG, "Updated location: " + lastKnownLocation.toString());
+            } else {
+                Log.i(TAG, "Inaccurate location: " + location.toString());
             }
-            Log.i(TAG, lastKnownLocation.toString());
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), (float) 17.5));
+
+            if (lastKnownLocation != null) {
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), (float) 17.5));
+            }
         } else {
-            Toast.makeText(getApplicationContext(), "Couldn't get location. Please check if your GPS is on", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), LOCATION_UNAVAILABLE_MSG, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -180,12 +191,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         map = googleMap;
         map.setLocationSource(this);
         map.setMyLocationEnabled(true);
+        map.setOnMyLocationButtonClickListener(this);
+    }
+
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Log.i(TAG, "onMyLocationButtonClick()");
+        try {
+            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            onLocationChanged(location);
+        } catch (SecurityException e) {
+            Toast.makeText(getApplicationContext(), LOCATION_PERMISSION_UNAVAILABLE_MSG, Toast.LENGTH_LONG).show();
+            finish();
+        }
+
+        return true;
     }
 
     @Override
     public void onConnectionFailed(ConnectionResult result) {
         Log.i(TAG, "onConnectionFailed()");
-        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+        Log.i(TAG, "Connection failed: " + result.getErrorCode());
     }
 
     @Override
