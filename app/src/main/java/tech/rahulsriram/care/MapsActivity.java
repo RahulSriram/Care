@@ -26,14 +26,15 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.location.LocationListener;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, OnMyLocationButtonClickListener, ConnectionCallbacks, OnConnectionFailedListener, LocationListener, LocationSource {
-    String TAG = "tech.rahulsriram.care.logger";
+    private static final String TAG = "care-logger";
+    private static final String LOCATION_UNAVAILABLE_MSG = "Couldn't get location. Please check if your GPS is on";
+    private static final String LOCATION_PERMISSION_UNAVAILABLE_MSG = "Application needs Location Permissions to work";
+    private boolean isFirstLocationUpdate = true;
     private GoogleMap map;
     private Location lastKnownLocation;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-    private LocationSource.OnLocationChangedListener mMapLocationListener = null;
-    private String LOCATION_UNAVAILABLE_MSG = "Couldn't get location. Please check if your GPS is on";
-    private String LOCATION_PERMISSION_UNAVAILABLE_MSG = "Application needs Location Permissions to work";
+    private LocationSource.OnLocationChangedListener mLocationListener = null;
 
     protected synchronized void buildGoogleApiClient() {
         Log.i(TAG, "buildGoogleApiClient()");
@@ -48,9 +49,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.i(TAG, "createLocationRequest()");
         mLocationRequest = new LocationRequest();
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(10000);
-        mLocationRequest.setFastestInterval(5000);
-        mLocationRequest.setSmallestDisplacement(10);
+        //mLocationRequest.setInterval(10*60*1000); //in milliseconds
+        //mLocationRequest.setFastestInterval(5*60*1000); //in milliseconds
+        mLocationRequest.setSmallestDisplacement(10); //in meters
     }
 
     protected boolean checkPlayServices() {
@@ -137,6 +138,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onDestroy() {
+        Log.i(TAG, "onDestroy()");
+        super.onDestroy();
+    }
+
+    @Override
     protected void onStop() {
         Log.i(TAG, "onStop()");
         super.onStop();
@@ -159,13 +166,24 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location != null) {
             if (location.hasAccuracy() && location.getAccuracy() < 30) {
                 lastKnownLocation = location;
-                if (mMapLocationListener != null) {
-                    mMapLocationListener.onLocationChanged(lastKnownLocation);
+                if (mLocationListener != null) {
+                    mLocationListener.onLocationChanged(lastKnownLocation);
                 }
 
                 Log.i(TAG, "Updated location: " + lastKnownLocation.toString());
+                Toast.makeText(getApplicationContext(), "Updated: " + lastKnownLocation.toString(), Toast.LENGTH_SHORT).show();
+            } else if(isFirstLocationUpdate) {
+                lastKnownLocation = location;
+                isFirstLocationUpdate = false;
+                if (mLocationListener != null) {
+                    mLocationListener.onLocationChanged(lastKnownLocation);
+                }
+
+                Log.i(TAG, "Initial location inaccurate: " + lastKnownLocation.toString());
+                Toast.makeText(getApplicationContext(), "Initial: " + lastKnownLocation.toString(), Toast.LENGTH_SHORT).show();
             } else {
                 Log.i(TAG, "Inaccurate location: " + location.toString());
+                Toast.makeText(getApplicationContext(), "Inaccurate: " + location.toString(), Toast.LENGTH_SHORT).show();
             }
 
             if (lastKnownLocation != null) {
@@ -190,8 +208,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.i(TAG, "onMapReady()");
         map = googleMap;
         map.setLocationSource(this);
-        map.setMyLocationEnabled(true);
         map.setOnMyLocationButtonClickListener(this);
+        try {
+            map.setMyLocationEnabled(true);
+        } catch (SecurityException e) {
+            Toast.makeText(getApplicationContext(), LOCATION_PERMISSION_UNAVAILABLE_MSG, Toast.LENGTH_LONG).show();
+            finish();
+        }
     }
 
     @Override
@@ -229,12 +252,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void activate(OnLocationChangedListener onLocationChangedListener) {
         Log.i(TAG, "activate()");
-        mMapLocationListener = onLocationChangedListener;
+        mLocationListener = onLocationChangedListener;
     }
 
     @Override
     public void deactivate() {
         Log.i(TAG, "deactivate()");
-        mMapLocationListener = null;
+        mLocationListener = null;
     }
 }
