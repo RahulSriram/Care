@@ -4,4 +4,8 @@
     <string name="login">Login</string>
     <string name="mobileNumberInput">Enter Mobile Number</string>
     <string name="loginButton">Login</string>
+    <string name="app_name1">Select Item</string>
+    <string name="biscuit">Biscuit</string>
+    <string name="clothes">Clothes</string>
+    <string name="printitemsselected"></string>
 </resources>
