@@ -14,22 +14,31 @@ import java.util.ArrayList;
  * Created by SREEVATHSA on 15-08-2016.
  */
 public class ItemSelectionActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
-    ArrayList<String> selection = new ArrayList<String>();
-    FloatingActionButton donate;
+    ArrayList<String> selection = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.itemselectionactivity);
-        Switch foodSwitch = (Switch) findViewById(R.id.FoodSwitch);
-        foodSwitch.setOnCheckedChangeListener(this);g
-        Switch packedFoodSwitch = (Switch) findViewById(R.id.PackedFoodSwitch);
+        setContentView(R.layout.activity_item_selection);
+
+        Switch homeFoodSwitch = (Switch) findViewById(R.id.homeFoodSwitch);
+        assert homeFoodSwitch != null;
+        homeFoodSwitch.setOnCheckedChangeListener(this);
+
+        Switch packedFoodSwitch = (Switch) findViewById(R.id.packedFoodSwitch);
+        assert packedFoodSwitch != null;
         packedFoodSwitch.setOnCheckedChangeListener(this);
-        Switch clothesSwitch = (Switch) findViewById(R.id.ClothesSwitch);
+
+        Switch clothesSwitch = (Switch) findViewById(R.id.clothesSwitch);
+        assert clothesSwitch != null;
         clothesSwitch.setOnCheckedChangeListener(this);
-        Switch bookSwitch = (Switch) findViewById(R.id.BookSwitch);
+
+        Switch bookSwitch = (Switch) findViewById(R.id.bookSwitch);
+        assert bookSwitch != null;
         bookSwitch.setOnCheckedChangeListener(this);
-        donate = (FloatingActionButton) findViewById(R.id.donate);
+
+        FloatingActionButton donate = (FloatingActionButton) findViewById(R.id.donateButton);
+        assert donate != null;
         donate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,9 +55,10 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if(isChecked)
+        if(isChecked) {
             selection.add(buttonView.getText().toString());
-        else
+        } else {
             selection.remove(buttonView.getText().toString());
+        }
     }
 }

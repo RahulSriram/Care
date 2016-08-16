@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">Care</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="login">Login</string>
-    <string name="mobileNumberInput">Enter Mobile Number</string>
-    <string name="loginButton">Login</string>
-    <string name="app_name1">Select Item</string>
-    <string name="biscuit">Biscuit</string>
+    <string name="enter_mobile_number">Enter Mobile Number</string>
+    <string name="login_button">Login</string>
+    <string name="item_selector_activity_name">Select Items</string>
+    <string name="home_made_food">Home Made Food</string>
+    <string name="packed_food">Packed Food</string>
     <string name="clothes">Clothes</string>
-    <string name="printitemsselected"></string>
+    <string name="books">Books</string>
+    <string name="default_country_code">+91</string>
 </resources>

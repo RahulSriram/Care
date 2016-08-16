@@ -29,7 +29,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String TAG = "care-logger";
     private static final String LOCATION_UNAVAILABLE_MSG = "Couldn't get location. Please check if your GPS is on";
     private static final String LOCATION_PERMISSION_UNAVAILABLE_MSG = "Application needs Location Permissions to work";
-    private boolean isFirstLocationUpdate = true;
+    //private boolean isFirstLocationUpdate = true;
     private GoogleMap map;
     private Location lastKnownLocation;
     private GoogleApiClient mGoogleApiClient;
@@ -63,7 +63,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (GooglePlayServicesUtil.isUserRecoverableError(result)) {
                 GooglePlayServicesUtil.getErrorDialog(result, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             } else {
-                Toast.makeText(getApplicationContext(), "This device is not supported.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "This device is not supported", Toast.LENGTH_LONG).show();
                 finish();
             }
 
@@ -113,7 +113,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     reply = lastKnownLocation.toString();
                 }
 
-                Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), reply, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -164,7 +164,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.i(TAG, "onLocationChanged()");
 
         if (location != null) {
-            if (location.hasAccuracy() && location.getAccuracy() < 30) {
+            if (location.hasAccuracy()/* && location.getAccuracy() < 30*/) {
                 lastKnownLocation = location;
                 if (mLocationListener != null) {
                     mLocationListener.onLocationChanged(lastKnownLocation);
@@ -172,7 +172,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Log.i(TAG, "Updated location: " + lastKnownLocation.toString());
                 Toast.makeText(getApplicationContext(), "Updated: " + lastKnownLocation.toString(), Toast.LENGTH_SHORT).show();
-            } else if(isFirstLocationUpdate) {
+            }/* else if(isFirstLocationUpdate) {
                 lastKnownLocation = location;
                 isFirstLocationUpdate = false;
                 if (mLocationListener != null) {
@@ -181,7 +181,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 Log.i(TAG, "Initial location inaccurate: " + lastKnownLocation.toString());
                 Toast.makeText(getApplicationContext(), "Initial: " + lastKnownLocation.toString(), Toast.LENGTH_SHORT).show();
-            } else {
+            }*/ else {
                 Log.i(TAG, "Inaccurate location: " + location.toString());
                 Toast.makeText(getApplicationContext(), "Inaccurate: " + location.toString(), Toast.LENGTH_SHORT).show();
             }
@@ -190,7 +190,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()), (float) 17.5));
             }
         } else {
-            Toast.makeText(getApplicationContext(), LOCATION_UNAVAILABLE_MSG, Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), LOCATION_UNAVAILABLE_MSG, Toast.LENGTH_SHORT).show();
         }
     }
 

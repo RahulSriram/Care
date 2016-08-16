@@ -10,41 +10,41 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class LoginActivity extends AppCompatActivity {
+    String deviceId;
+    EditText phoneNumber, countryCode;
 
-    String phoneNumber,deviceId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Button login =(Button)findViewById(R.id.loginButton);
+
+        countryCode = (EditText) findViewById(R.id.countryCode);
+        phoneNumber = (EditText) findViewById(R.id.mobileNumber);
+        deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        Button login = (Button) findViewById(R.id.loginButton);
         assert login != null;
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String code = countryCode.getText().toString();
+                if(code.length() == 0) {
+                    code = getString(R.string.default_country_code);
+                }
 
-                Toast.makeText(LoginActivity.this,getPhoneNumber(), Toast.LENGTH_LONG).show();
-                Toast.makeText(LoginActivity.this,getDeviceId(), Toast.LENGTH_LONG).show();
-                Intent intent =new Intent(LoginActivity.this,ItemSelectionActivity.class);
-                startActivity(intent);
+                String number = code + phoneNumber.getText().toString();
 
+                if (number.length() >= 12) {
+                    Toast.makeText(getApplicationContext(), number + "\n" + deviceId, Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this, ItemSelectionActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Toast.makeText(getApplicationContext(), number + " isn't a valid phone number", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
-    }
-    public String getPhoneNumber()
-    {
-        EditText pn = (EditText)findViewById(R.id.mobileNumberInput);
-        phoneNumber = pn.getText().toString();
-        return phoneNumber;
-
-    }
-
-    public String getDeviceId()
-    {
-
-        deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-
-          return deviceId;
     }
 
 }
