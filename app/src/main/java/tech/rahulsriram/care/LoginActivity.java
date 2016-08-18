@@ -36,8 +36,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (number.length() >= 12) {
                     Toast.makeText(getApplicationContext(), number + "\n" + deviceId, Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(LoginActivity.this, ItemSelectionActivity.class);
-                    startActivity(intent);
+                    startActivity(new Intent(LoginActivity.this, ItemSelectionActivity.class));
+                    startService(new Intent(LoginActivity.this, CareService.class));
                     finish();
                 } else {
                     Toast.makeText(getApplicationContext(), number + " isn't a valid phone number", Toast.LENGTH_LONG).show();
