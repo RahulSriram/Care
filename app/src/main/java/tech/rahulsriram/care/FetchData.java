@@ -9,8 +9,9 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 
 /**
  * Created by Jebin on 25-07-2016.
@@ -31,20 +32,28 @@ public class FetchData extends AsyncTask<String,String,String> {
     @Override
     protected String doInBackground(String... arg0) {
         StringBuilder sb= new StringBuilder();
-        String username=arg0[0],password=arg0[1],ip="192.168.1.104",data;
+        String username=arg0[0],password=arg0[1],ip="192.168.1.104";
+        String link = "http://10.0.0.20:8000/login",id="437687",number="tdsjfgsdhf";
+        String data="id=" + id + "&number="+number;
             try {
                 //String link = "http://" + ip + "/sample.php?username=" + username + "&password=" + password+"&available=false";
-                String link = "http://192.168.1.104/sample.html";
                 URL url = new URL(link);
-                URLConnection conn = url.openConnection();
-                conn.setDoOutput(true);
-                //conn.setRequestMethod("POST");
+                HttpURLConnection conn =(HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                try{
+                    OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                    writer.write(data);
+                    writer.flush();
+                }catch (Exception e){
+                    return new String("Exception: " + e.getMessage());
+                }
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while((data=reader.readLine())!=null) {
                     sb.append(data);
                     publishProgress(data);
                     Thread.sleep(1000);
                 }
+                conn.disconnect();
                 return sb.toString();
             } catch (IOException e) {
                 e.printStackTrace();

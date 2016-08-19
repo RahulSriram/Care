@@ -21,11 +21,12 @@ public class Checkconnectivity {
             NetworkInfo[] info = cm.getAllNetworkInfo();
             for (int i = 0; i < info.length; i++) {
                 if (info[i].getState() == NetworkInfo.State.CONNECTED) {
-                    b = new FetchDataa().execute("yes").get();
-                    return b;
+                    //b = new FetchDataa().execute("yes").get();
+                    //return b;
+                    return "true";
                 }
             }
-            return b;
+            return "nil";
         } catch (Exception e) {
             return "nil";
         }
