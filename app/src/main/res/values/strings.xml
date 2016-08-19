@@ -9,4 +9,6 @@
     <string name="clothes">Clothes</string>
     <string name="books">Books</string>
     <string name="default_country_code">+91</string>
+    <string name="LOGIN">Login</string>
+    <string name="View">VIEW</string>
 </resources>
