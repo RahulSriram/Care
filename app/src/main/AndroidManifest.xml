@@ -53,7 +53,9 @@
             android:label="@string/item_selector_activity_name" />
         <service android:name=".CareService" />
         <activity android:name=".AllNotifications"
-            android:label="All Notification">
+            android:label="@string/app_name">
+        </activity>
+        <activity android:name=".NewsFeed">
         </activity>
         <receiver android:name=".ConnectivityChangeReceiver" android:enabled="true">
             <intent-filter>

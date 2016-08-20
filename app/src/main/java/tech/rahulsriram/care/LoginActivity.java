@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (number.length() >= 12) {
                     Toast.makeText(getApplicationContext(), number + "\n" + deviceId, Toast.LENGTH_LONG).show();
-                    //startActivity(new Intent(LoginActivity.this, ItemSelectionActivity.class));
+                    startActivity(new Intent(LoginActivity.this, ItemSelectionActivity.class));
                     startService(new Intent(LoginActivity.this, CareService.class));
                     new Registration(textView).execute("yes");
                     Log.i(deviceId,"on button click");
