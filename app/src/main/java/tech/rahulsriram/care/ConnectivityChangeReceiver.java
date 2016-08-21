@@ -17,6 +17,6 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
         Log.i(a,"receiver");
         //intent=new Intent(context,CareService.class);
         //context.startService(intent);
-            new Checkconnectivity().generatenotifications(context);
+        new CheckConnectivity().generatenotifications(context);
     }
 }

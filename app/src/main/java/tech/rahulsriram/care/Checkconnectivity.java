@@ -13,7 +13,7 @@ import android.support.v4.app.NotificationCompat;
 /**
  * Created by Jebin on 13-08-2016.
  */
-public class Checkconnectivity {
+public class CheckConnectivity {
     public String a = "s", b = "nil",check=null;
     public String checkconnectivity(Context context) {
         try {
