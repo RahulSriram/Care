@@ -14,7 +14,7 @@ import android.support.v4.app.NotificationCompat;
  * Created by Jebin on 13-08-2016.
  */
 public class CheckConnectivity {
-    public String a = "s", b = "nil",check=null;
+    public String a = "s", b = "nil", check=null;
     public String checkconnectivity(Context context) {
         try {
             ConnectivityManager cm = (ConnectivityManager)context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -32,22 +32,22 @@ public class CheckConnectivity {
         }
     }
 
-    public void generatenotifications(Context context) {
-        Intent intent=new Intent(context.getApplicationContext(),CareService.class);
-        Intent intenti=new Intent(context.getApplicationContext(), AllNotifications.class);
+    public void generateNotifications(Context context) {
+        Intent intent = new Intent(context.getApplicationContext(), CareService.class);
+        Intent intentI = new Intent(context.getApplicationContext(), AllNotifications.class);
         NotificationManager mNotificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        PendingIntent pi = PendingIntent.getActivity(context.getApplicationContext(), 0, intenti, 0);
+        PendingIntent pi = PendingIntent.getActivity(context.getApplicationContext(), 0, intentI, 0);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context.getApplicationContext());
         mBuilder.setSmallIcon(R.drawable.a);
         mBuilder.setContentTitle("Notification");
         if (!("nil".equals(a = checkconnectivity(context)))) {
-            if(isMyServiceRunning(CareService.class,context))/*"myservice".equals(check=sharedPreferences.getString("servicename","n/a")))*/{
+            if(isMyServiceRunning(CareService.class, context))/*"myservice".equals(check=sharedPreferences.getString("servicename","n/a")))*/{
                 mBuilder.setContentText(a + " Donations Available");
                 mBuilder.setContentIntent(pi);
                 mNotificationManager.notify(324255, mBuilder.build());
-                //TaskStackBuilder taskStackBuilder=TaskStackBuilder.create(context);
+                //TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
                 //taskStackBuilder.addParentStack(AllNotifications.class);
-                //taskStackBuilder.addNextIntent(intenti);
+                //taskStackBuilder.addNextIntent(intentI);
             }
             else {
                 context.startService(intent);
@@ -59,8 +59,6 @@ public class CheckConnectivity {
         } else {
             if(isMyServiceRunning(CareService.class,context)){
                 context.stopService(intent);
-            }
-            else{
             }
         }
     }

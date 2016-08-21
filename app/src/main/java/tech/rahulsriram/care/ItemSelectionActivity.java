@@ -21,13 +21,14 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 /**
  * Created by SREEVATHSA on 15-08-2016.
  */
 public class ItemSelectionActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
     ArrayList<String> selection = new ArrayList<>();
-    String description, verify="", final_Donate;
+    String description, verify = "", finalDonate;
     EditText itemDescription;
     SharedPreferences sp;
 
@@ -38,61 +39,48 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
-        itemDescription = (EditText)findViewById(R.id.itemDescription);
+        itemDescription = (EditText) findViewById(R.id.itemDescription);
+
         Switch homeFoodSwitch = (Switch) findViewById(R.id.homeFoodSwitch);
-        assert homeFoodSwitch != null;
         homeFoodSwitch.setOnCheckedChangeListener(this);
 
         Switch packedFoodSwitch = (Switch) findViewById(R.id.packedFoodSwitch);
-        assert packedFoodSwitch != null;
         packedFoodSwitch.setOnCheckedChangeListener(this);
 
         Switch clothesSwitch = (Switch) findViewById(R.id.clothesSwitch);
-        assert clothesSwitch != null;
         clothesSwitch.setOnCheckedChangeListener(this);
 
         Switch bookSwitch = (Switch) findViewById(R.id.bookSwitch);
-        assert bookSwitch != null;
         bookSwitch.setOnCheckedChangeListener(this);
 
         FloatingActionButton donate = (FloatingActionButton) findViewById(R.id.donateButton);
-        assert donate != null;
         donate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                for (String selections : selection) {   //your was String selection : selection two same variable i just changed it
-                    final_Donate += selections;
+                for (String selections : selection) {
+                    finalDonate += selections;
                 }
-                description = itemDescription.getText().toString();
-                 if(description.length()==0)
-                 {
-                     Snackbar snackbar = Snackbar
-                             .make(v, "Please enter description", Snackbar.LENGTH_LONG);
-                     snackbar.show();
-                 }
-                else{
-                     new Donate(ItemSelectionActivity.this).execute(sp.getString("id", ""),sp.getString("number", ""),sp.getString("location", ""),description);
-                     if(verify.equals("ok")){
-                         Snackbar snackbar = Snackbar
-                                 .make(v, "Done", Snackbar.LENGTH_LONG);
-                         snackbar.show();
-                     }
-                     else{
-                         Snackbar snackbar = Snackbar
-                                 .make(v, "Please TRY AGAIN", Snackbar.LENGTH_LONG);
-                         snackbar.show();
-                     }
-                 }
 
-                Toast.makeText(getApplicationContext(), final_Donate, Toast.LENGTH_LONG).show();
+                description = itemDescription.getText().toString();
+                 if(description.length() != 0) {
+                     new Donate().execute();
+
+                     if(verify.equals("ok")) {
+                         Snackbar.make(v, "Done", Snackbar.LENGTH_LONG).show();
+                     } else {
+                         Snackbar.make(v, "Please try again", Snackbar.LENGTH_LONG).show();
+                     }
+                 } else {
+                     Snackbar.make(v, "Please enter description", Snackbar.LENGTH_LONG).show();
+                 }
             }
         });
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+    public void onCheckedChanged(CompoundButton switchText, boolean isChecked) {
         if(isChecked) {
-            switch (buttonView.getText().toString()) {
+            switch (switchText.getText().toString()) {
                 case "Home Made Food":
                     selection.add("0");
                     break;
@@ -110,7 +98,7 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
                     break;
             }
         } else {
-            switch (buttonView.getText().toString()) {
+            switch (switchText.getText().toString()) {
                 case "Home Made Food":
                     selection.remove("0");
                     break;
@@ -130,50 +118,42 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
         }
     }
 
-    class Donate extends AsyncTask<String,String,String> {
-        private Context context;
-        ArrayAdapter<String> adapter;
-        public Donate(Context context) {
-            this.context = context;
-        }
-        protected void onPreExecute() {
-        }
+    class Donate extends AsyncTask<String, String, String> {
         @Override
-        protected String doInBackground(String... arg0) {
-            String line, data;
-            StringBuilder sb=new StringBuilder();
-            String link = "http://10.0.0.20:8000/donate";
+        protected String doInBackground(String... params) {
+            String data;
+            StringBuilder sb = new StringBuilder();
+
             try {
-                URL url = new URL(link);
-                HttpURLConnection conn =(HttpURLConnection) url.openConnection();
+                URL url = new URL("http://10.0.0.20:8000/donate");
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
-                data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&location=" + sp.getString("location", "")+ "&items=" + final_Donate + "&description=" + description;
-                BufferedReader reader = new BufferedReader (new InputStreamReader(conn.getInputStream()));
-                try{
+                data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&location=" + sp.getString("location", "")+ "&items=" + finalDonate + "&description=" + description;
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                try {
                     OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
                     writer.write(data);
                     writer.flush();
-                }catch (Exception e){
-                    return new String("Exception: " + e.getMessage());
+                } catch (Exception e) {
+                    return "error";
                 }
 
-                while((line=reader.readLine())!= null) {
+                String line;
+                while ((line = reader.readLine()) != null) {
                     sb.append(line);
-                    publishProgress(line);
                 }
-                return line;
+
             } catch (IOException e) {
-                e.printStackTrace();
-                return new String("Exception: " + e.getMessage());
+                return "error";
             }
-        }
-        protected void onProgressUpdate(String... values) {
-            adapter.add(values[0]);
+
+            return sb.toString();
         }
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            verify+=result;
+            verify = result;
         }
     }
 

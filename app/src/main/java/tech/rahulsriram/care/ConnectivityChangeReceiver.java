@@ -11,12 +11,12 @@ import android.util.Log;
 
 
 public class ConnectivityChangeReceiver extends BroadcastReceiver {
-    public String a;
+    private static final String TAG = "care-logger";
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(a,"receiver");
+        Log.i(TAG, "receiver");
         //intent=new Intent(context,CareService.class);
         //context.startService(intent);
-        new CheckConnectivity().generatenotifications(context);
+        new CheckConnectivity().generateNotifications(context);
     }
 }
