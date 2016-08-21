@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Care</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="enter_mobile_number">Enter Mobile Number</string>
     <string name="login_button">Login</string>
     <string name="item_selector_activity_name">Select Items</string>
@@ -9,6 +8,6 @@
     <string name="clothes">Clothes</string>
     <string name="books">Books</string>
     <string name="default_country_code">+91</string>
-    <string name="View">View</string>
+    <string name="view">View</string>
     <string name="enter_item_description">Enter Item Description</string>
 </resources>

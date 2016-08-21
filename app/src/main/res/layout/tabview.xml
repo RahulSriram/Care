@@ -21,7 +21,7 @@
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></TabWidget>
+                android:layout_height="wrap_content" />
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -33,18 +33,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:text="@string/View"
+                        android:text="@string/view"
                         android:id="@+id/button0"
                         android:layout_gravity="center_horizontal" />
+
                     <ListView
                         android:layout_below="@id/textView2"
                         android:layout_width="match_parent"
                         android:layout_height="420dp"
                         android:id="@+id/listView0"
                         android:layout_gravity="center_horizontal" />
+
                     <android.support.design.widget.FloatingActionButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -55,9 +58,9 @@
                         app:fabSize="normal"
                         app:layout_anchorGravity="end|bottom"
                         android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginBottom="20dp"
-                        android:layout_marginRight="20dp"/>
+                        android:layout_marginEnd="20dp"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -65,10 +68,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <Button
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
-                        android:text="@string/View"
+                        android:text="@string/view"
                         android:id="@+id/button1"
                         android:layout_gravity="center_horizontal" />
 
@@ -85,6 +89,7 @@
                         android:layout_height="380dp"
                         android:id="@+id/listView1"
                         android:layout_gravity="center_horizontal" />
+
                     <android.support.design.widget.FloatingActionButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -95,9 +100,9 @@
                         app:fabSize="normal"
                         app:layout_anchorGravity="end|bottom"
                         android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:layout_marginBottom="20dp"
-                        android:layout_marginRight="20dp"/>
+                        android:layout_marginEnd="20dp"/>
                 </RelativeLayout>
             </FrameLayout>
         </LinearLayout>
