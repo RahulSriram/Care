@@ -18,8 +18,8 @@ tools:context="tech.rahulsriram.care.ItemSelectionActivity">
         android:id="@+id/homeFoodImage"
         android:src="@drawable/home_food"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:contentDescription="@string/home_made_food" />
+        android:contentDescription="@string/home_made_food"
+        android:layout_alignParentLeft="true" />
 
     <ImageView
         android:layout_marginTop="@dimen/image_horizontal_margin"
@@ -29,8 +29,8 @@ tools:context="tech.rahulsriram.care.ItemSelectionActivity">
         android:id="@+id/packedFoodImage"
         android:src="@drawable/packed_food"
         android:layout_below="@+id/homeFoodImage"
-        android:layout_alignParentStart="true"
-        android:contentDescription="@string/packed_food" />
+        android:contentDescription="@string/packed_food"
+        android:layout_alignParentLeft="true" />
 
     <ImageView
         android:layout_marginTop="@dimen/image_horizontal_margin"
@@ -40,14 +40,14 @@ tools:context="tech.rahulsriram.care.ItemSelectionActivity">
         android:id="@+id/clothesImage"
         android:src="@drawable/clothes"
         android:layout_below="@+id/packedFoodImage"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/packedFoodSwitch"
-        android:contentDescription="@string/clothes" />
+        android:contentDescription="@string/clothes"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/packedFoodSwitch" />
 
 
     <ImageView
         android:layout_marginTop="@dimen/image_horizontal_margin"
-        android:layout_marginBottom="@dimen/image_horizontal_margin"
+        android:layout_marginBottom="5dp"
         android:layout_width="100dp"
         android:layout_height="75dp"
         android:id="@+id/booksImage"
@@ -55,7 +55,9 @@ tools:context="tech.rahulsriram.care.ItemSelectionActivity">
         android:layout_below="@+id/clothesImage"
         android:layout_alignParentStart="true"
         android:layout_toStartOf="@+id/clothesSwitch"
-        android:contentDescription="@string/books" />
+        android:contentDescription="@string/books"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/clothesSwitch" />
 
     <Switch
         android:layout_marginStart="@dimen/item_switch_marginStart"
@@ -66,7 +68,10 @@ tools:context="tech.rahulsriram.care.ItemSelectionActivity">
         android:layout_alignTop="@+id/homeFoodImage"
         android:layout_above="@+id/packedFoodImage"
         android:layout_toEndOf="@+id/homeFoodImage"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginLeft="@dimen/item_switch_marginStart"
+        android:layout_toRightOf="@+id/homeFoodImage"
+        android:layout_alignParentRight="true" />
 
     <Switch
         android:layout_marginStart="@dimen/item_switch_marginStart"
@@ -77,7 +82,10 @@ tools:context="tech.rahulsriram.care.ItemSelectionActivity">
         android:layout_below="@+id/homeFoodSwitch"
         android:layout_alignEnd="@+id/homeFoodSwitch"
         android:layout_alignBottom="@+id/packedFoodImage"
-        android:layout_toEndOf="@+id/homeFoodImage" />
+        android:layout_toEndOf="@+id/homeFoodImage"
+        android:layout_marginLeft="@dimen/item_switch_marginStart"
+        android:layout_alignRight="@+id/homeFoodSwitch"
+        android:layout_toRightOf="@+id/homeFoodImage" />
 
     <Switch
         android:layout_marginStart="@dimen/item_switch_marginStart"
@@ -88,7 +96,10 @@ tools:context="tech.rahulsriram.care.ItemSelectionActivity">
         android:layout_below="@+id/packedFoodSwitch"
         android:layout_alignEnd="@+id/packedFoodSwitch"
         android:layout_alignBottom="@+id/clothesImage"
-        android:layout_toEndOf="@+id/clothesImage" />
+        android:layout_toEndOf="@+id/clothesImage"
+        android:layout_marginLeft="@dimen/item_switch_marginStart"
+        android:layout_alignRight="@+id/packedFoodSwitch"
+        android:layout_toRightOf="@+id/clothesImage" />
 
     <Switch
         android:layout_marginStart="@dimen/item_switch_marginStart"
@@ -99,7 +110,10 @@ tools:context="tech.rahulsriram.care.ItemSelectionActivity">
         android:layout_below="@+id/clothesImage"
         android:layout_alignEnd="@+id/clothesSwitch"
         android:layout_alignBottom="@+id/booksImage"
-        android:layout_toEndOf="@+id/booksImage" />
+        android:layout_toEndOf="@+id/booksImage"
+        android:layout_marginLeft="@dimen/item_switch_marginStart"
+        android:layout_alignRight="@+id/clothesSwitch"
+        android:layout_toRightOf="@+id/booksImage" />
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -111,5 +125,7 @@ tools:context="tech.rahulsriram.care.ItemSelectionActivity">
         app:fabSize="normal"
         app:layout_anchorGravity="end|bottom"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"/>
 </RelativeLayout>

@@ -34,9 +34,8 @@ public class FetchData extends AsyncTask<String,String,String> {
         StringBuilder sb= new StringBuilder();
         String username=arg0[0],password=arg0[1],ip="192.168.1.104";
         String link = "http://10.0.0.20:8000/login",id="437687",number="tdsjfgsdhf";
-        String data="id=" + id + "&number="+number;
+        String data="id=" + id + "&number="+number;//TODO:number,name,latitude,longitude,item,description
             try {
-                //String link = "http://" + ip + "/sample.php?username=" + username + "&password=" + password+"&available=false";
                 URL url = new URL(link);
                 HttpURLConnection conn =(HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
