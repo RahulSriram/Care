@@ -56,6 +56,7 @@ public class NameInput extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
+        username.clearFocus();
         if(name.length()!=0) {
            new NameTask().execute();
         }

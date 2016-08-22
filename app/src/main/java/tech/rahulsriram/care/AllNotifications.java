@@ -61,6 +61,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         tabSpec.setIndicator("Open Donations");
         tabHost.addTab(tabSpec);
         tabHost.setCurrentTab(0);
+
         //TODO:NewsFeed
         ArrayList<String> lst0 = new ArrayList<String>();
         lst0.add("hi4");
@@ -75,6 +76,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                 startActivity(new Intent(AllNotifications.this, ItemSelectionActivity.class));
             }
         });
+
         //TODO:Open Donations
         ArrayList<String> lst1 = new ArrayList<String>();
         lst1.add("hi4");
@@ -104,6 +106,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
         }
     }
+
     //TODO: Menu
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater=getMenuInflater();
@@ -124,6 +127,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         dialog.setContentView(R.layout.dialogbox);
         dialog.show();
     }
+
     //TODO: Gesture
     public boolean onTouchEvent(MotionEvent m){
 //        float lastX = 0;

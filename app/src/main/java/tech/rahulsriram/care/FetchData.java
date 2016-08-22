@@ -53,14 +53,11 @@ public class FetchData extends AsyncTask<String,String,String> {
                     Thread.sleep(1000);
                 }
                 conn.disconnect();
-                return sb.toString();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return new String("Exception: " + e.getMessage());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-                return new String("Exception: " + e.getMessage());
+            } catch (Exception e) {
+                return "error";
             }
+
+        return sb.toString();
     }
 
     @Override
@@ -69,7 +66,7 @@ public class FetchData extends AsyncTask<String,String,String> {
     }
 
     protected void onPostExecute(String result) {
-        this.noti.setText(result);
+        noti.setText(result);
     }
 }
 
