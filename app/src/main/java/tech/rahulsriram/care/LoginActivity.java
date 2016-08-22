@@ -3,6 +3,7 @@ package tech.rahulsriram.care;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -33,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText phoneNumber, countryCode;
     TextView textView;
     ActionBar actionBar;
+    SharedPreferences sp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 //        getSupportActionBar().setDisplayUseLogoEnabled(true);
 //        getSupportActionBar().setLogo(R.drawable.a);
 //        actionBar.setIcon(R.drawable.a);
+        sp = getSharedPreferences("Care", MODE_PRIVATE);
         textView=(TextView)findViewById(R.id.textView2);
         countryCode = (EditText) findViewById(R.id.countryCode);
         phoneNumber = (EditText) findViewById(R.id.mobileNumber);
@@ -50,6 +54,9 @@ public class LoginActivity extends AppCompatActivity {
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
         deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        SharedPreferences.Editor editor=sp.edit();
+        editor.putString("id",deviceId);
+        editor.commit();
         Button login = (Button) findViewById(R.id.loginButton);
         assert login != null;
         login.setOnClickListener(new View.OnClickListener() {
@@ -61,23 +68,17 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 number = code + phoneNumber.getText().toString();
+                SharedPreferences.Editor editor=sp.edit();
+                editor.putString("number",number);
+                editor.commit();
 
                 if (number.length() >= 12) {
                     new Registration(LoginActivity.this).execute(deviceId, number, name, code);
                     Log.i(deviceId, "on button click");
-                    if (b.equals("auth_fail")) {
-                        Snackbar snackbar = Snackbar
-                                .make(v, b, Snackbar.LENGTH_LONG);
-                        snackbar.show();
-                    } else {
-                        startActivity(new Intent(LoginActivity.this, AllNotifications.class));
-                        startService(new Intent(LoginActivity.this, CareService.class));
-                    }
-                    //finish();
-                } else {
-                    Snackbar snackbar = Snackbar
-                            .make(v, "Aleardy Exists", Snackbar.LENGTH_LONG);
-                    snackbar.show();
+                }
+                else{
+                    Snackbar.make(v, "Please type tour number", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
                 }
             }
         });
@@ -88,37 +89,35 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
     public boolean onOptionsItemSelected(MenuItem item){
-        new Registration(LoginActivity.this).execute(deviceId,number,name,code);
-            if(b.equals("auth_fails")){
-            Snackbar snackbar = Snackbar
-                    .make(this.findViewById(android.R.id.content), b, Snackbar.LENGTH_LONG);
-            snackbar.show();
-        }
-        else{
-            startActivity(new Intent(LoginActivity.this, AllNotifications.class));
-            startService(new Intent(LoginActivity.this, CareService.class));
+        code = countryCode.getText().toString();
+        if (code.length() == 0) {
+            code = getString(R.string.default_country_code);
         }
 
+        number = code + phoneNumber.getText().toString();
+        number = code + phoneNumber.getText().toString();
+        SharedPreferences.Editor editor=sp.edit();
+        editor.putString("number",number);
+        editor.apply();
+
+        if (number.length() >= 12) {
+            new Registration(LoginActivity.this).execute(deviceId, number, name, code);
+            Log.i(deviceId, "on button click");
+        }
+        else{
+            Toast.makeText(this,"error",Toast.LENGTH_LONG).show();
+        }
 //        Snackbar snack = Snackbar.make(findViewById(android.R.id.content), "Had a snack at Snackbar", Snackbar.LENGTH_LONG);
 //        View view = snack.getView();
 //        FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)view.getLayoutParams();
 //        params.gravity = Gravity.TOP;
 //        view.setLayoutParams(params);
-//        snack.show();
+//        snack.show()
         return false;
     }
 
     class Registration extends AsyncTask<String,Void,String>
     {       Context context;
-        //        public interface AsyncResponse {
-//                void processFinish(String output);
-//        }
-//
-//        public AsyncResponse delegate = null;
-//
-//        public Registration(AsyncResponse delegate){
-//                this.delegate = delegate;
-//        }
         String add_info_url,line="0",a;
         ProgressDialog dialog=null;
         public Registration(Context cont)
@@ -131,19 +130,20 @@ public class LoginActivity extends AppCompatActivity {
             Log.i(a,"preexecute");
             dialog=new ProgressDialog(context);
             add_info_url = "http://10.0.0.20:8000/register";
-            dialog.setMessage("loading");
+            dialog.setMessage("Registering");
             dialog.show();
             dialog.setCanceledOnTouchOutside(false);
         }
         @Override
         protected String doInBackground(String ...var) {
-            String data_string="id=&number=&code=";
+            String data_string="id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "");//"id=&number=&code=";
             StringBuilder sb=new StringBuilder();
             try {
                 URL url= new URL(add_info_url);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
-                //httpURLConnection.setConnectTimeout(10000);
+                httpURLConnection.setConnectTimeout(2000);
+                httpURLConnection.setReadTimeout(2000);
                 OutputStreamWriter bufferedWriter =new OutputStreamWriter(httpURLConnection.getOutputStream());
                 bufferedWriter.write(data_string);
                 bufferedWriter.flush();
@@ -153,19 +153,25 @@ public class LoginActivity extends AppCompatActivity {
                 return line;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
-                return new String("Exception: " + e.getMessage());
+                return "auth_fail";
             } catch (IOException e) {
                 e.printStackTrace();
-                return new String("Exception: " + e.getMessage());
+                return "auth_fail";
             }
         }
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             Log.i(a,"postxecute");
-            dialog.dismiss();
             Toast.makeText(context,result,Toast.LENGTH_LONG).show();
             b=result;
+            if (b.equals("auth_fail")) {
+                Toast.makeText(context,"error",Toast.LENGTH_LONG).show();
+            } else {
+                startActivity(new Intent(LoginActivity.this, AllNotifications.class));
+                startService(new Intent(LoginActivity.this, CareService.class));
+            }
+            dialog.dismiss();
         }
     }
 
