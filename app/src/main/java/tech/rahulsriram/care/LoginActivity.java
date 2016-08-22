@@ -29,9 +29,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class LoginActivity extends AppCompatActivity {
-    String deviceId, name, verify, number, code, b="auth_fail", smsCode, TAG = "care-logger";
+    String verify, smsCode, TAG = "care-logger";
     EditText phoneNumber, countryCode;
-    TextView textView;
     SharedPreferences sp;
 
     @Override
@@ -39,13 +38,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         sp = getSharedPreferences("Care", MODE_PRIVATE);
-        textView=(TextView)findViewById(R.id.textView2);
         countryCode = (EditText) findViewById(R.id.countryCode);
         phoneNumber = (EditText) findViewById(R.id.mobileNumber);
         if(phoneNumber.requestFocus()) {
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
-        deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String deviceId = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString("id", deviceId);
         editor.apply();
@@ -56,25 +54,29 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
     public boolean onOptionsItemSelected(MenuItem item){
-        phoneNumber.clearFocus();
-        countryCode.clearFocus();
-        code = countryCode.getText().toString();
+        String code = countryCode.getText().toString();
+
+        if (phoneNumber.hasFocus()) {
+            phoneNumber.clearFocus();
+        }
+
+        if (countryCode.hasFocus()) {
+            countryCode.clearFocus();
+        }
 
         if (code.length() == 0) {
             code = getString(R.string.default_country_code);
         }
 
-        number = code + phoneNumber.getText().toString();
-        number = code + phoneNumber.getText().toString();
-        SharedPreferences.Editor editor=sp.edit();
+        String number = code + phoneNumber.getText().toString();
+        SharedPreferences.Editor editor = sp.edit();
         editor.putString("number", number);
         editor.apply();
 
         if (number.length() >= 12) {
-            new Registration(LoginActivity.this).execute(deviceId, number, name, code);
+            new Registration(LoginActivity.this).execute();
             Log.i(TAG, "on button click");
-        }
-        else{
+        } else {
             Snackbar.make(findViewById(R.id.loginLayout), "Please type your number", Snackbar.LENGTH_LONG).show();
         }
         return false;
@@ -154,8 +156,6 @@ public class LoginActivity extends AppCompatActivity {
                 URL url = new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
-//                httpURLConnection.setConnectTimeout(2000);
-//                httpURLConnection.setReadTimeout(2000);
                 OutputStreamWriter bufferedWriter = new OutputStreamWriter(httpURLConnection.getOutputStream());
                 bufferedWriter.write(data_string);
                 bufferedWriter.flush();
@@ -176,14 +176,14 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.i(TAG,"postxecute");
+            Log.i(TAG,"postexecute");
             Toast.makeText(context,result,Toast.LENGTH_LONG).show();
-            b=result;
-            if (b.equals("auth_fail")) {
-                Toast.makeText(context,"error",Toast.LENGTH_LONG).show();
-            } else {
+
+            if (result.equals("ok")) {
                 startActivity(new Intent(LoginActivity.this, AllNotifications.class));
                 startService(new Intent(LoginActivity.this, CareService.class));
+            } else {
+                Toast.makeText(context, "Please try again.",Toast.LENGTH_LONG).show();
             }
             dialog.dismiss();
         }

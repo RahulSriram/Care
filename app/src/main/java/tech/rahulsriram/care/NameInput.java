@@ -25,9 +25,7 @@ import java.net.URL;
  * Created by SREEVATHSA on 22-08-2016.
  */
 public class NameInput extends AppCompatActivity {
-
-
-    String name, TAG = "care-logger";
+    String TAG = "care-logger";
     EditText username;
     SharedPreferences sp;
 
@@ -39,11 +37,6 @@ public class NameInput extends AppCompatActivity {
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
         username = (EditText) findViewById(R.id.username);
-        name = username.getText().toString();
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("name", name);
-        editor.apply();
-
         if(username.requestFocus()) {
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
@@ -56,25 +49,31 @@ public class NameInput extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        username.clearFocus();
-        if(name.length()!=0) {
-           new NameTask().execute();
+        String name = username.getText().toString();
+
+        if (username.hasFocus()) {
+            username.clearFocus();
+        }
+
+        if (name.length() != 0) {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("name", name);
+            editor.apply();
+            new SetNameTask().execute();
         }
 
         return true;
     }
 
-    class NameTask extends AsyncTask<String,Void,String> {
+    class SetNameTask extends AsyncTask<String,Void,String> {
         Context context;
-        String add_info_url,line="0";
-        ProgressDialog dialog=null;
+        ProgressDialog dialog = null;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             Log.i(TAG,"preexecute");
             dialog=new ProgressDialog(context);
-            add_info_url = "http://10.0.0.20:8000/set_name";
             dialog.setMessage("Setting name");
             dialog.show();
             dialog.setCanceledOnTouchOutside(false);
@@ -82,25 +81,29 @@ public class NameInput extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String ...var) {
-            String data_string="id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&name=" + sp.getString("name", "");
+            String link = "http://10.0.0.20:8000/set_name";
+            String data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&name=" + sp.getString("name", "");
             StringBuilder sb = new StringBuilder();
+
             try {
-                URL url= new URL(add_info_url);
+                URL url= new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setConnectTimeout(2000);
-                httpURLConnection.setReadTimeout(2000);
-                OutputStreamWriter bufferedWriter =new OutputStreamWriter(httpURLConnection.getOutputStream());
-                bufferedWriter.write(data_string);
-                bufferedWriter.flush();
+                OutputStreamWriter writer =new OutputStreamWriter(httpURLConnection.getOutputStream());
+                writer.write(data);
+                writer.flush();
                 BufferedReader reader=new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                line=reader.readLine();
+                String line;
+
+                while((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
                 httpURLConnection.disconnect();
             } catch (Exception e) {
                 return "error";
             }
 
-            return line;
+            return sb.toString();
         }
         @Override
         protected void onPostExecute(String result) {

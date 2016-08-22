@@ -24,48 +24,38 @@ public class SplashActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_username);
+
         sp = getSharedPreferences("Care", MODE_PRIVATE);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         new SplashTask().execute();
     }
 
     class SplashTask extends AsyncTask<String,Void,String> {
-        String add_info_url,line="0";
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.i(TAG, "preexecute");
-
-            add_info_url = "http://10.0.0.20:8000/login";
-        }
-
         @Override
         protected String doInBackground(String ...var) {
             if(!sp.getString("id", "").isEmpty() && !sp.getString("number", "").isEmpty()) {
-                String data_string = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "");
+                String link = "http://10.0.0.20:8000/login";
+                String data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "");
+                StringBuilder sb = new StringBuilder();
 
                 try {
-                    URL url = new URL(add_info_url);
+                    URL url= new URL(link);
                     HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                     httpURLConnection.setRequestMethod("POST");
-                    httpURLConnection.setConnectTimeout(2000);
-                    httpURLConnection.setReadTimeout(2000);
-                    OutputStreamWriter bufferedWriter = new OutputStreamWriter(httpURLConnection.getOutputStream());
-                    bufferedWriter.write(data_string);
-                    bufferedWriter.flush();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                    line = reader.readLine();
+                    OutputStreamWriter writer =new OutputStreamWriter(httpURLConnection.getOutputStream());
+                    writer.write(data);
+                    writer.flush();
+                    BufferedReader reader=new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                    String line;
+
+                    while((line = reader.readLine()) != null) {
+                        sb.append(line);
+                    }
                     httpURLConnection.disconnect();
                 } catch (Exception e) {
                     return "error";
                 }
 
-                return line;
+                return sb.toString();
             } else {
                 return "error";
             }

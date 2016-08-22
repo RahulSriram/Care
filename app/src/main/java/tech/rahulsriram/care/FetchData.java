@@ -32,7 +32,6 @@ public class FetchData extends AsyncTask<String,String,String> {
     @Override
     protected String doInBackground(String... arg0) {
         StringBuilder sb= new StringBuilder();
-        String username=arg0[0],password=arg0[1],ip="192.168.1.104";
         String link = "http://10.0.0.20:8000/login",id="437687",number="tdsjfgsdhf";
         String data="id=" + id + "&number="+number;//TODO:number,name,latitude,longitude,item,description
             try {
