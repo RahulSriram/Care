@@ -1,72 +1,115 @@
 package tech.rahulsriram.care;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TabHost;
-import android.widget.TextView;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 /**
  * Created by Jebin on 24-07-2016.
  */
 public class AllNotifications extends AppCompatActivity implements View.OnClickListener,GestureDetector.OnGestureListener {
-    Button button0,button1;
-    TextView text0,text1;
-    ListView listView0,listView1;
-    String item,description;
-    String device_id,number;
+    public static View.OnClickListener myOnClickListener;
+    Button button0, button1;
+    String device_id,Jebin="careLog";
+
+    static RecyclerView.Adapter adapter0;
+    RecyclerView.LayoutManager layoutManager0;
+    static RecyclerView recyclerView0;
+    static ArrayList<DataModel> data0;
+
+    static RecyclerView.Adapter adapter1;
+    RecyclerView.LayoutManager layoutManager1;
+    static RecyclerView recyclerView1;
+    static ArrayList<DataModel> data1;
+
+    String[] name0 = new String[50];
+    String[] description0 = new String[50];
+    String[] item0 = new String[50];
+
+    String[] name1 = new String[50];
+    String[] description1 = new String[50];
+    String[] item1 = new String[50];
 
     TabHost tabHost;
     GestureDetector gestureDetector;
 
+    SharedPreferences sp;
+    String location1;
+    String[] location2;
+
+    String[] separated10[]=new String[20][20];
+    String[] separated0;
+
+    String[] separated11[]=new String[20][20];
+    String[] separated1;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabview);
-        gestureDetector=new GestureDetector(this);
 
-        button0=(Button) findViewById(R.id.button0);
+        sp = getSharedPreferences("Care", MODE_PRIVATE);
+        location1=sp.getString("location", "");
+        location2=location1.split(",");
+
+        gestureDetector = new GestureDetector(this);
+
+        button0 = (Button) findViewById(R.id.button0);
         button0.setOnClickListener(this);
-        listView0=(ListView)findViewById(R.id.listView0);
+        recyclerView0 = (RecyclerView) findViewById(R.id.my_recycler_view0);
+        recyclerView0.setHasFixedSize(true);
+        layoutManager0 = new LinearLayoutManager(this);
+        recyclerView0.setLayoutManager(layoutManager0);
+        recyclerView0.setItemAnimator(new DefaultItemAnimator());
 
-        button1=(Button) findViewById(R.id.button1);
+        button1 = (Button) findViewById(R.id.button1);
         button1.setOnClickListener(this);
-        text1 = (TextView)findViewById(R.id.textView1);
-        listView1=(ListView)findViewById(R.id.listView1);
+        recyclerView1 = (RecyclerView) findViewById(R.id.my_recycler_view1);
+        recyclerView1.setHasFixedSize(true);
+        layoutManager1 = new LinearLayoutManager(this);
+        recyclerView1.setLayoutManager(layoutManager1);
+        recyclerView1.setItemAnimator(new DefaultItemAnimator());
+        myOnClickListener = new MyOnClickListener(this);
 
-        tabHost=(TabHost)findViewById(R.id.tabHost);
+        tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
 
         TabHost.TabSpec tabSpec;
 
-        tabSpec=tabHost.newTabSpec("newsfeed");
+        tabSpec = tabHost.newTabSpec("newsfeed");
         tabSpec.setContent(R.id.linearLayout0);
         tabSpec.setIndicator("Completed Donations");
         tabHost.addTab(tabSpec);
 
-        tabSpec=tabHost.newTabSpec("notification");
+        tabSpec = tabHost.newTabSpec("notification");
         tabSpec.setContent(R.id.linearLayout1);
         tabSpec.setIndicator("Open Donations");
         tabHost.addTab(tabSpec);
         tabHost.setCurrentTab(0);
-
-        //TODO:NewsFeed
-        ArrayList<String> lst0 = new ArrayList<String>();
-        lst0.add("hi4");
-        ArrayAdapter <String> adapter0 = new ArrayAdapter <String>( this, android.R.layout.simple_list_item_1, lst0);
-        listView0.setAdapter(adapter0);
 
         FloatingActionButton donate0 = (FloatingActionButton) findViewById(R.id.donateButton0);
         assert donate0 != null;
@@ -77,12 +120,6 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        //TODO:Open Donations
-        ArrayList<String> lst1 = new ArrayList<String>();
-        lst1.add("hi4");
-        ArrayAdapter <String> adapter1 = new ArrayAdapter <String>( this, android.R.layout.simple_list_item_1, lst1);
-        listView1.setAdapter(adapter1);
-
         FloatingActionButton donate1 = (FloatingActionButton) findViewById(R.id.donateButton1);
         assert donate1 != null;
         donate1.setOnClickListener(new View.OnClickListener() {
@@ -92,16 +129,34 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
             }
         });
     }
+    class MyOnClickListener implements View.OnClickListener {
+
+        private final Context context;
+
+        private MyOnClickListener(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Log.i(Jebin,"mapp");
+            Uri gmmIntentUri = Uri.parse("google.navigation:q="+String.valueOf(separated1[2])+","+String.valueOf(separated1[3]));
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivity(mapIntent);
+
+        }
+    }
     //TODO: end of onCreate
 
     //TODO:Onbutton click
-    public void onClick(View v){
-        switch(v.getId()){
+    public void onClick(View v) {
+        switch (v.getId()) {
             case R.id.button0:
-                new FetchDataa(AllNotifications.this,listView0).execute(item, description);//id number
+                new FetchDataa().execute();
                 break;
             case R.id.button1:
-                new FetchData(AllNotifications.this,text1,listView1).execute(device_id,number);//id number
+                new FetchData().execute();
                 break;
 
         }
@@ -109,12 +164,13 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
     //TODO: Menu
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.setting,menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.setting, menu);
         return true;
     }
-    public boolean onOptionsItemSelected(MenuItem item){
-        switch(item.getItemId()){
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.settings:
                 settings();
                 return true;
@@ -122,25 +178,27 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                 return false;
         }
     }
-    public void settings(){
-        Dialog dialog=new Dialog(this);
+
+    public void settings() {
+        Dialog dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialogbox);
         dialog.show();
     }
 
     //TODO: Gesture
-    public boolean onTouchEvent(MotionEvent m){
+    public boolean onTouchEvent(MotionEvent m) {
 //        float lastX = 0;
         return gestureDetector.onTouchEvent(m);
     }
+
     @Override
     public boolean onDown(MotionEvent e) {
-      //  Toast.makeText(this,"down swipe",Toast.LENGTH_LONG).show();
+        //  Toast.makeText(this,"down swipe",Toast.LENGTH_LONG).show();
         return false;
     }
-   // public boolean onLeft  (MotionEvent e) {
-     //   Toast.makeText(this,"down swipe",Toast.LENGTH_LONG).show();
-       // return false;
+    // public boolean onLeft  (MotionEvent e) {
+    //   Toast.makeText(this,"down swipe",Toast.LENGTH_LONG).show();
+    // return false;
     //}
 
     @Override
@@ -169,6 +227,116 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         return false;
+    }
+
+
+    class FetchData extends AsyncTask<String, String, String> {
+
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            StringBuilder sb = new StringBuilder();
+            String link = "http://10.0.0.20:8000/donation";
+            String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius"+sp.getString("radius","")+"&status+"+sp.getString("status","");//TODO:number,name,latitude,longitude,item,description
+            try {
+                Log.i(Jebin, "doInBackground");
+                URL url = new URL(link);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(10);
+                conn.setReadTimeout(10);
+                conn.setRequestMethod("POST");
+                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                writer.write(data);
+                writer.flush();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                while ((data = reader.readLine()) != null) {
+                    Log.i(Jebin, "while");
+                    sb.append(data);
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                return "error";
+            }
+            return sb.toString();
+        }
+
+        protected void onPostExecute(String result) {
+            int i1;
+            separated1 = result.split(";");
+            for(i1=0;i1<separated1.length;i1++)
+            separated11[i1]=separated1[i1].split(",");
+            for(int i=0;i<separated1.length;i++){
+            name1[i]=separated11[i][1];
+            item1[i]=separated11[i][4];
+            description1[i]=separated11[i][5];
+            }
+            data1=new ArrayList<DataModel>();
+            for(int j = 0; j<2;j++)
+            {
+                Log.i(Jebin, "datamodel");
+                data1.add(new DataModel(name1[j], item1[j], description1[j]));
+            }
+
+            adapter1=new CustomAdapter(data1);
+            recyclerView1.setAdapter(adapter1);
+            Log.i(Jebin,"call to adapter");
+        }
+    }
+    class FetchDataa extends AsyncTask<String, String, String> {
+
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            StringBuilder sb = new StringBuilder();
+            String link = "http://10.0.0.20:8000/recent_history",line;
+            String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius"+sp.getString("radius","")+"&status+"+sp.getString("status","");
+            try {
+                Log.i(Jebin, "doInBackground");
+                URL url = new URL(link);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setConnectTimeout(10);
+                conn.setReadTimeout(10);
+                conn.setRequestMethod("POST");
+                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                writer.write(data);
+                writer.flush();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                while ((line = reader.readLine()) != null) {
+                    Log.i(Jebin, "while");
+                    sb.append(line);
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                return "error";
+            }
+            return sb.toString();
+        }
+
+        protected void onPostExecute(String result) {
+            int i1;
+            separated0 = result.split(";");
+            for(i1=0;i1<separated0.length;i1++)
+                separated10[i1]=separated0[i1].split(",");
+            for(int i=0;i<separated0.length;i++){
+                name0[i]=separated10[i][1];
+                item0[i]=separated10[i][4];
+                description0[i]=separated10[i][5];
+            }
+            data0=new ArrayList<DataModel>();
+            for(int j = 0; j<2;j++)
+            {
+                Log.i(Jebin, "datamodel");
+                data0.add(new DataModel(name0[j], item0[j], description0[j]));
+            }
+
+            adapter0=new CustomAdapter(data0);
+            recyclerView0.setAdapter(adapter0);
+            Log.i(Jebin,"call to adapter");
+        }
     }
 }
 
