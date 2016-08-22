@@ -34,7 +34,7 @@ public class NameInput extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.username_activity);
+        setContentView(R.layout.activity_username);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
@@ -107,7 +107,7 @@ public class NameInput extends AppCompatActivity {
             Log.i(TAG, "postexecute");
 
             if (result.equals("ok")) {
-                startActivity(new Intent(NameInput.this, ItemSelectionActivity.class));
+                startActivity(new Intent(NameInput.this, AllNotifications.class));
             } else {
                 Snackbar.make(findViewById(R.id.usernameLayout), "Couldn't set name. Try again", Snackbar.LENGTH_LONG).show();
             }
