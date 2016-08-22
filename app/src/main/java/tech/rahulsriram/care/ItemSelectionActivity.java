@@ -24,7 +24,7 @@ import java.util.ArrayList;
  */
 public class ItemSelectionActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
     ArrayList<String> selection = new ArrayList<>();
-    String description, verify = "", finalDonate;
+    String description, finalDonate;
     EditText itemDescription;
     SharedPreferences sp;
 
@@ -58,17 +58,15 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
                 }
 
                 description = itemDescription.getText().toString();
-                 if(description.length() != 0 && finalDonate.length() != 0) {
-                     new Donate().execute();
+                if(itemDescription.hasFocus()) {
+                    itemDescription.clearFocus();
+                }
 
-                     if(verify.equals("ok")) {
-                         Snackbar.make(v, "Done", Snackbar.LENGTH_LONG).show();
-                     } else {
-                         Snackbar.make(v, "Please try again", Snackbar.LENGTH_LONG).show();
-                     }
-                 } else {
-                     Snackbar.make(v, "Please enter description", Snackbar.LENGTH_LONG).show();
-                 }
+                if(description.length() != 0 && finalDonate.length() != 0) {
+                    new Donate().execute();
+                } else {
+                    Snackbar.make(v, "Please enter description", Snackbar.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -149,7 +147,11 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            verify = result;
+            if(result.equals("ok")) {
+                Snackbar.make(findViewById(R.id.ItemSelectionLayout), "Done", Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(findViewById(R.id.ItemSelectionLayout), "Please try again", Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 

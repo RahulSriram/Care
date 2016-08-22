@@ -25,20 +25,19 @@
         android:layout_height="50dp"
         android:text="Set update interval (in minutes)"
         android:id="@+id/update_interval_text"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/update_interval"
-        android:layout_alignBottom="@+id/update_interval"
         android:paddingTop="10dp"
         android:textSize="20dp"
         android:textColor="#000000"
-        android:layout_below="@+id/volunteer_switch" />
+        android:layout_marginTop="27dp"
+        android:layout_below="@+id/volunteer_switch"
+        android:layout_alignParentStart="true" />
 
     <Spinner
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/update_interval"
-        android:layout_below="@+id/volunteer_switch"
-        android:layout_alignEnd="@+id/volunteer_switch" />
+        android:layout_alignTop="@+id/update_interval_text"
+        android:layout_alignStart="@+id/radius" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -48,17 +47,18 @@
         android:paddingTop="10dp"
         android:textSize="20dp"
         android:textColor="#000000"
+        android:layout_marginTop="24dp"
         android:layout_below="@+id/update_interval_text"
-        android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/radius" />
+        android:layout_alignParentStart="true" />
 
     <EditText
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:id="@+id/radius"
-        android:layout_alignTop="@+id/radius_text"
-        android:layout_alignParentEnd="true"
         android:maxLength="3"
         android:inputType="number"
-        android:hint="10" />
+        android:hint="10"
+        android:layout_alignBaseline="@+id/radius_text"
+        android:layout_alignBottom="@+id/radius_text"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>

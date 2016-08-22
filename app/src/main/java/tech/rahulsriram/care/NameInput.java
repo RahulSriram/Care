@@ -21,9 +21,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by SREEVATHSA on 22-08-2016.
- */
 public class NameInput extends AppCompatActivity {
     String TAG = "care-logger";
     EditText username;
@@ -32,12 +29,12 @@ public class NameInput extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_username);
+        setContentView(R.layout.activity_name_input);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
         username = (EditText) findViewById(R.id.username);
-        if(username.requestFocus()) {
+        if (username.requestFocus()) {
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
@@ -55,7 +52,7 @@ public class NameInput extends AppCompatActivity {
             username.clearFocus();
         }
 
-        if (name.length() != 0) {
+        if (!name.isEmpty()) {
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("name", name);
             editor.apply();
@@ -74,7 +71,7 @@ public class NameInput extends AppCompatActivity {
             super.onPreExecute();
             Log.i(TAG,"preexecute");
             dialog=new ProgressDialog(context);
-            dialog.setMessage("Setting name");
+            dialog.setMessage("Setting up account");
             dialog.show();
             dialog.setCanceledOnTouchOutside(false);
         }
@@ -105,6 +102,7 @@ public class NameInput extends AppCompatActivity {
 
             return sb.toString();
         }
+
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -113,18 +111,9 @@ public class NameInput extends AppCompatActivity {
             if (result.equals("ok")) {
                 startActivity(new Intent(NameInput.this, AllNotifications.class));
             } else {
-                Snackbar.make(findViewById(R.id.usernameLayout), "Couldn't set name. Try again", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.NameInputLayout), "Couldn't set name. Try again", Snackbar.LENGTH_LONG).show();
             }
             dialog.dismiss();
         }
     }
-
-
-
-
-
-
-
-
-
 }
