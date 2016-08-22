@@ -1,6 +1,5 @@
 package tech.rahulsriram.care;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,11 +7,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +18,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.StringTokenizer;
 
 /**
  * Created by SREEVATHSA on 15-08-2016.
@@ -62,7 +58,7 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
                 }
 
                 description = itemDescription.getText().toString();
-                 if(description.length() != 0) {
+                 if(description.length() != 0 && finalDonate.length() != 0) {
                      new Donate().execute();
 
                      if(verify.equals("ok")) {

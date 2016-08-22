@@ -10,4 +10,6 @@
     <string name="default_country_code">+91</string>
     <string name="view">View</string>
     <string name="enter_item_description">Enter Item Description</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="finish">Finish</string>
 </resources>
