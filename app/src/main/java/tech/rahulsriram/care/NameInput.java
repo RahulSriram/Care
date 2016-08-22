@@ -21,30 +21,20 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-/**
- * Created by SREEVATHSA on 22-08-2016.
- */
 public class NameInput extends AppCompatActivity {
-
-
-    String name, TAG = "care-logger";
+    String TAG = "care-logger";
     EditText username;
     SharedPreferences sp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_username);
+        setContentView(R.layout.activity_name_input);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
         username = (EditText) findViewById(R.id.username);
-        name = username.getText().toString();
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString("name", name);
-        editor.apply();
-
-        if(username.requestFocus()) {
+        if (username.requestFocus()) {
             this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
     }
@@ -56,52 +46,63 @@ public class NameInput extends AppCompatActivity {
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        username.clearFocus();
-        if(name.length()!=0) {
-           new NameTask().execute();
+        String name = username.getText().toString();
+
+        if (username.hasFocus()) {
+            username.clearFocus();
+        }
+
+        if (!name.isEmpty()) {
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("name", name);
+            editor.apply();
+            new SetNameTask().execute();
         }
 
         return true;
     }
 
-    class NameTask extends AsyncTask<String,Void,String> {
+    class SetNameTask extends AsyncTask<String,Void,String> {
         Context context;
-        String add_info_url,line="0";
-        ProgressDialog dialog=null;
+        ProgressDialog dialog = null;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             Log.i(TAG,"preexecute");
             dialog=new ProgressDialog(context);
-            add_info_url = "http://10.0.0.20:8000/set_name";
-            dialog.setMessage("Setting name");
+            dialog.setMessage("Setting up account");
             dialog.show();
             dialog.setCanceledOnTouchOutside(false);
         }
 
         @Override
         protected String doInBackground(String ...var) {
-            String data_string="id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&name=" + sp.getString("name", "");
+            String link = "http://10.0.0.20:8000/set_name";
+            String data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&name=" + sp.getString("name", "");
             StringBuilder sb = new StringBuilder();
+
             try {
-                URL url= new URL(add_info_url);
+                URL url= new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.setConnectTimeout(2000);
-                httpURLConnection.setReadTimeout(2000);
-                OutputStreamWriter bufferedWriter =new OutputStreamWriter(httpURLConnection.getOutputStream());
-                bufferedWriter.write(data_string);
-                bufferedWriter.flush();
+                OutputStreamWriter writer =new OutputStreamWriter(httpURLConnection.getOutputStream());
+                writer.write(data);
+                writer.flush();
                 BufferedReader reader=new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                line=reader.readLine();
+                String line;
+
+                while((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
                 httpURLConnection.disconnect();
             } catch (Exception e) {
                 return "error";
             }
 
-            return line;
+            return sb.toString();
         }
+
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
@@ -110,18 +111,9 @@ public class NameInput extends AppCompatActivity {
             if (result.equals("ok")) {
                 startActivity(new Intent(NameInput.this, AllNotifications.class));
             } else {
-                Snackbar.make(findViewById(R.id.usernameLayout), "Couldn't set name. Try again", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.NameInputLayout), "Couldn't set name. Try again", Snackbar.LENGTH_LONG).show();
             }
             dialog.dismiss();
         }
     }
-
-
-
-
-
-
-
-
-
 }

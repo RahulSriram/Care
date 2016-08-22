@@ -39,18 +39,11 @@ public class CareService extends Service implements GoogleApiClient.ConnectionCa
         Log.i(TAG, "CareService");
         Intent intent = new Intent(this, ConnectivityChangeReceiver.class);
         PendingIntent pi = PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        SharedPreferences sp = getSharedPreferences("Care", MODE_PRIVATE);
         Calendar cal = Calendar.getInstance(); //create calendar
-        cal.add(Calendar.SECOND, 5); //add 5 seconds to calendar
+        cal.add(Calendar.SECOND, sp.getInt("update_interval", 15) * 60); //add 5 seconds to calendar
         AlarmManager am = (AlarmManager) this.getSystemService(ALARM_SERVICE);
-        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), 5*1000, pi);
-        Log.i(TAG, "call ConnectivityReceiver");
-            /*new FetchDataa(
-                    new FetchDataa.AsyncResponse() {
-                @Override
-                public void processFinish(String output) {
-                a=output;
-                }
-            }).execute(available);*/
+        am.setInexactRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), sp.getInt("update_interval", 15) * 60 * 1000, pi);
 
         Log.i(TAG, "start location client");
         if (checkPlayServices()) {
@@ -91,9 +84,7 @@ public class CareService extends Service implements GoogleApiClient.ConnectionCa
     protected void createLocationRequest() {
         Log.i(TAG, "createLocationRequest()");
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        //mLocationRequest.setInterval(10*60*1000); //in milliseconds
-        //mLocationRequest.setFastestInterval(5*60*1000); //in milliseconds
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         mLocationRequest.setSmallestDisplacement(10); //in meters
     }
 
