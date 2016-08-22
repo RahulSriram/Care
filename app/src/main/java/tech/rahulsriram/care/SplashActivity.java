@@ -25,7 +25,11 @@ public class SplashActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_username);
         sp = getSharedPreferences("Care", MODE_PRIVATE);
-
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         new SplashTask().execute();
     }
 
