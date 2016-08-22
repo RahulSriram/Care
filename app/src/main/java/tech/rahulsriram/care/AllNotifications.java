@@ -121,7 +121,6 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     }
     public void settings(){
         Dialog dialog=new Dialog(this);
-        text1=(TextView)dialog.findViewById(R.id.textView2);
         dialog.setContentView(R.layout.dialogbox);
         dialog.show();
     }

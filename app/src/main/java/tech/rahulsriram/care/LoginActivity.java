@@ -7,16 +7,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
 //        getSupportActionBar().setLogo(R.drawable.a);
 //        actionBar.setIcon(R.drawable.a);
         sp = getSharedPreferences("Care", MODE_PRIVATE);
-        textView=(TextView)findViewById(R.id.textView2);
         countryCode = (EditText) findViewById(R.id.countryCode);
         phoneNumber = (EditText) findViewById(R.id.mobileNumber);
         if(phoneNumber.requestFocus()) {
@@ -57,31 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor editor=sp.edit();
         editor.putString("id",deviceId);
         editor.commit();
-        Button login = (Button) findViewById(R.id.loginButton);
-        assert login != null;
-        login.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                code = countryCode.getText().toString();
-                if (code.length() == 0) {
-                    code = getString(R.string.default_country_code);
-                }
 
-                number = code + phoneNumber.getText().toString();
-                SharedPreferences.Editor editor=sp.edit();
-                editor.putString("number",number);
-                editor.commit();
-
-                if (number.length() >= 12) {
-                    new Registration(LoginActivity.this).execute(deviceId, number, name, code);
-                    Log.i(deviceId, "on button click");
-                }
-                else{
-                    Snackbar.make(v, "Please type tour number", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            }
-        });
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater=getMenuInflater();
