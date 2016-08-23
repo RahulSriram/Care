@@ -1,6 +1,5 @@
 package tech.rahulsriram.care;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -50,10 +50,16 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     ArrayList<String> name0 = new ArrayList<>();
     ArrayList<String> description0 = new ArrayList<>();
     ArrayList<String> item0 = new ArrayList<>();
+    ArrayList<String> number0 = new ArrayList<>();
+    ArrayList<String> latitude0 = new ArrayList<>();
+    ArrayList<String> longitude0 = new ArrayList<>();
 
     ArrayList<String> name1 = new ArrayList<>();
     ArrayList<String> description1 = new ArrayList<>();
     ArrayList<String> item1 = new ArrayList<>();
+    ArrayList<String> number1 = new ArrayList<>();
+    ArrayList<String> latitude1 = new ArrayList<>();
+    ArrayList<String> longitude1 = new ArrayList<>();
 
     TabHost tabHost;
     GestureDetector gestureDetector;
@@ -67,16 +73,44 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
     String[] separated11[]=new String[20][20];
     String[] separated1;
+    String la,lo;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabview);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
-        location1=sp.getString("location", "");
-        location2=location1.split(",");
 
         gestureDetector = new GestureDetector(this);
+
+
+        name0.add("name0");
+        description0.add("descritpion0");
+        item0.add("item0");
+        number0.add("number0");
+        latitude0.add("46.2276");
+        longitude0.add("2.2137");
+        name0.add("name0");
+        description0.add("descritpion0");
+        item0.add("item0");
+        number0.add("number0");
+        latitude0.add("46.2276");
+        longitude0.add("2.2137");
+
+        name1.add("name1");
+        description1.add("descritpion1");
+        item1.add("item1");
+        number1.add("number1");
+        latitude1.add("46.2276");
+        longitude1.add("2.2137");
+        name1.add("name1");
+        description1.add("descritpion1");
+        item1.add("item1");
+        number1.add("number1");
+        latitude1.add("46.2276");
+        longitude1.add("2.2137");
+
+
 
         button0 = (Button) findViewById(R.id.button0);
         button0.setOnClickListener(this);
@@ -139,8 +173,36 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void onClick(View v) {
+            if(!(tabHost.getCurrentTab()==0)) {
+//                int selectedItemPosition0 = recyclerView0.getChildPosition(v);
+//                RecyclerView.ViewHolder viewHolder0
+//                        = recyclerView0.findViewHolderForPosition(selectedItemPosition0);
+//                TextView textViewIcon0 = (TextView) viewHolder0.itemView.findViewById(R.id.textViewIcon);
+//                String selectedName0 = (String) textViewIcon0.getText();
+//                for(int i=0;i<description0.size();i++) {
+//                    if (selectedName0.equals(description0.get(i))) {
+//                        la = latitude0.get(i);
+//                        lo = longitude0.get(i);
+//                        Log.i(Jebin,la+lo+"0000");
+//                    }
+//                }
+//            }
+//            else {
+                int selectedItemPosition1 = recyclerView1.getChildPosition(v);
+                RecyclerView.ViewHolder viewHolder1
+                        = recyclerView1.findViewHolderForPosition(selectedItemPosition1);
+                TextView textViewIcon1 = (TextView) viewHolder1.itemView.findViewById(R.id.textViewIcon);
+                String selectedName1 = (String) textViewIcon1.getText();
+                for(int i=0;i<description1.size();i++) {
+                    if (selectedName1.equals(description1.get(i))) {
+                        la = latitude1.get(i);
+                        lo = longitude1.get(i);
+                        Log.i(Jebin,la+lo+"1111");
+                    }
+                }
+            }
             Log.i(Jebin,"mapp");
-            Uri gmmIntentUri = Uri.parse("google.navigation:q="+String.valueOf(separated1[2])+","+String.valueOf(separated1[3]));
+            Uri gmmIntentUri = Uri.parse("google.navigation:q="+la+","+lo);
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);
@@ -153,10 +215,10 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button0:
-                new FetchDataa().execute();
+                new ClosedDonations().execute();
                 break;
             case R.id.button1:
-                new FetchData().execute();
+                new OpenDonations().execute();
                 break;
 
         }
@@ -170,19 +232,8 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                settings();
-                return true;
-            default:
+        startActivity(new Intent(AllNotifications.this, SettingsActivity.class));
                 return false;
-        }
-    }
-
-    public void settings() {
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialogbox);
-        dialog.show();
     }
 
     //TODO: Gesture
@@ -230,17 +281,22 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     }
 
 
-    class FetchData extends AsyncTask<String, String, String> {
+    class OpenDonations extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
+            number1.clear();
+            name1.clear();
+            latitude1.clear();
+            longitude1.clear();
+            item1.clear();
+            description1.clear();
         }
 
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
-            sb.append("aaa");
-            String link = "http://10.0.0.20:8000/donation";
-            String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius"+sp.getString("radius","")+"&status+"+sp.getString("status","");//TODO:number,name,latitude,longitude,item,description
+            String link = "http://10.0.0.20:8000/recent_history",line1;
+            String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius="+sp.getString("radius","")+"&status=+open";//TODO:number,name,latitude,longitude,item,description
             try {
                 Log.i(Jebin, "doInBackground");
                 URL url = new URL(link);
@@ -252,13 +308,16 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                 writer.write(data);
                 writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((data = reader.readLine()) != null) {
+                while ((line1 = reader.readLine()) != null) {
                     Log.i(Jebin, "while");
-                    String[] data1=data.split(",");
+                    String[] line11=line1.split(",");
                     sb.append(data);
-                    name1.add(data1[1]);
-                    item1.add(data1[4]);
-                    description1.add(data1[5]);
+                    number1.add(line11[0]);
+                    name1.add(line11[1]);
+                    latitude1.add(line11[2]);
+                    longitude1.add(line11[3]);
+                    item1.add(line11[4]);
+                    description1.add(line11[5]);
                 }
                 conn.disconnect();
             } catch (Exception e) {
@@ -272,7 +331,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
             for(int j = 0; j<2;j++)
             {
                 Log.i(Jebin, "datamodel");
-                data1.add(new DataModel(name1.get(j), item1.get(j), description1.get(j)));
+                data1.add(new DataModel(number1.get(j),name1.get(j),latitude1.get(j),longitude1.get(j), item1.get(j), description1.get(j)));
             }
 
             adapter1=new CustomAdapter(data1);
@@ -280,16 +339,22 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
             Log.i(Jebin,"call to adapter");
         }
     }
-    class FetchDataa extends AsyncTask<String, String, String> {
+    class ClosedDonations extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
+            number0.clear();
+            name0.clear();
+            latitude0.clear();
+            longitude0.clear();
+            item0.clear();
+            description0.clear();
         }
 
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
-            String link = "http://10.0.0.20:8000/recent_history",line;
-            String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius"+sp.getString("radius","")+"&status+"+sp.getString("status","");
+            String link = "http://10.0.0.20:8000/recent_history",line0;
+            String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius="+sp.getString("radius","")+"&status=closed";
             try {
                 Log.i(Jebin, "doInBackground");
                 URL url = new URL(link);
@@ -301,13 +366,16 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                 writer.write(data);
                 writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line = reader.readLine()) != null) {
+                while ((line0 = reader.readLine()) != null) {
                     Log.i(Jebin, "while");
-                    String[] line0=data.split(",");
-                    sb.append(line);
-                    name0.add(line0[1]);
-                    item0.add(line0[4]);
-                    description0.add(line0[5]);
+                    String[] line00=data.split(",");
+                    sb.append(line0);
+                    number0.add(line00[0]);
+                    name0.add(line00[1]);
+                    latitude0.add(line00[2]);
+                    longitude0.add(line00[3]);
+                    item0.add(line00[4]);
+                    description0.add(line00[5]);
                 }
                 conn.disconnect();
             } catch (Exception e) {
@@ -318,10 +386,10 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
         protected void onPostExecute(String result) {
             data0=new ArrayList<>();
-            for(int j = 0; j<2;j++)
+            for(int j = 0; j< name0.size();j++)
             {
                 Log.i(Jebin, "datamodel");
-                data0.add(new DataModel(name0.get(j), item0.get(j), description0.get(j)));
+                data0.add(new DataModel(number0.get(j),name0.get(j),latitude0.get(j),longitude0.get(j), item0.get(j), description0.get(j)));
             }
 
             adapter0=new CustomAdapter(data0);
