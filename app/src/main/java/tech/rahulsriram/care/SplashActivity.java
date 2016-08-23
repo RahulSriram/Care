@@ -14,9 +14,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-/**
- * Created by SREEVATHSA on 22-08-2016.
- */
 public class SplashActivity extends AppCompatActivity{
     String TAG = "care-logger";
     SharedPreferences sp;
@@ -24,7 +21,7 @@ public class SplashActivity extends AppCompatActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_name_input);
+        setContentView(R.layout.activity_splash);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
         new SplashTask().execute();
