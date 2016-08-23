@@ -52,6 +52,7 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
         donate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finalDonate = "";
                 for (String selections : selection) {
                     finalDonate += selections;
                 }
@@ -123,22 +124,17 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
+                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                writer.write(data);
+                writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-                try {
-                    OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-                    writer.write(data);
-                    writer.flush();
-                } catch (Exception e) {
-                    return "error";
-                }
-
                 String line;
+
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
                 }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return "error";
             }
 
