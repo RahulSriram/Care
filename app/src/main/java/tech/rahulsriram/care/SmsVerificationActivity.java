@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class SmsVerificationActivity extends AppCompatActivity {
     String TAG = "care-logger";
@@ -63,7 +64,7 @@ public class SmsVerificationActivity extends AppCompatActivity {
         }
 
         if (!code.isEmpty()) {
-            new Registration(SmsVerificationActivity.this).execute();
+            new Registration(SmsVerificationActivity.this, smsCode.getText().toString()).execute();
         }
 
         return false;
@@ -71,30 +72,31 @@ public class SmsVerificationActivity extends AppCompatActivity {
 
     class Registration extends AsyncTask<String,Void,String> {
         Context context;
-        String link, code;
+        String code;
         ProgressDialog dialog = null;
 
-        public Registration(Context c) {
-            context = c;
-            code = smsCode.getText().toString();
+        public Registration(Context ctxt, String cde) {
+            context = ctxt;
+            code = cde;
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Log.i(TAG, "preexecute");
             dialog = new ProgressDialog(context);
-            link = "http://10.0.0.20:8000/register";
-            dialog.setMessage("Verifying smsCode");
+            Toast.makeText(context, code, Toast.LENGTH_SHORT).show();
+            dialog.setMessage("Verifying sms code");
             dialog.show();
             dialog.setCanceledOnTouchOutside(false);
         }
 
         @Override
         protected String doInBackground(String ...var) {
-            String data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&smsCode=" + code;
             StringBuilder sb = new StringBuilder();
+
             try {
+                String link = "http://10.0.0.20:8000/register";
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&code=" + URLEncoder.encode(code, "UTF-8");
                 URL url = new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -118,8 +120,6 @@ public class SmsVerificationActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.i(TAG,"postexecute");
-            Toast.makeText(context,result,Toast.LENGTH_LONG).show();
 
             if (result.equals("ok")) {
                 startActivity(new Intent(SmsVerificationActivity.this, NameInput.class));
@@ -127,6 +127,7 @@ public class SmsVerificationActivity extends AppCompatActivity {
             } else {
                 Snackbar.make(findViewById(R.id.SmsVerificationLayout), "Please try again", Snackbar.LENGTH_LONG).show();
             }
+
             dialog.dismiss();
         }
     }
@@ -150,11 +151,11 @@ public class SmsVerificationActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            String link = "10.0.0.20:8000/request_sms";
-            String data = "number=" + sp.getString("number", "");
             StringBuilder sb = new StringBuilder();
 
             try {
+                String link = "http://10.0.0.20:8000/request_sms";
+                String data = "number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8");
                 URL url= new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -181,6 +182,8 @@ public class SmsVerificationActivity extends AppCompatActivity {
             if (result.equals("error")) {
                 Snackbar.make(findViewById(R.id.SmsVerificationLayout), "Please try again", Snackbar.LENGTH_LONG).show();
             }
+
+            dialog.dismiss();
         }
     }
 }

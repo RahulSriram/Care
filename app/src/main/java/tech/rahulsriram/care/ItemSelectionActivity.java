@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,11 +18,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
-/**
- * Created by SREEVATHSA on 15-08-2016.
- */
 public class ItemSelectionActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
     ArrayList<String> selection = new ArrayList<>();
     String description, finalDonate;
@@ -53,6 +52,7 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
         donate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finalDonate = "";
                 for (String selections : selection) {
                     finalDonate += selections;
                 }
@@ -119,26 +119,22 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
             StringBuilder sb = new StringBuilder();
 
             try {
-                URL url = new URL("http://10.0.0.20:8000/donate");
+                String link = "http://10.0.0.20:8000/donate";
+                data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&items=" + URLEncoder.encode(finalDonate, "UTF-8") + "&description=" + URLEncoder.encode(description, "UTF-8");
+                URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
-                data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&location=" + sp.getString("location", "")+ "&items=" + finalDonate + "&description=" + description;
+                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                writer.write(data);
+                writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-                try {
-                    OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-                    writer.write(data);
-                    writer.flush();
-                } catch (Exception e) {
-                    return "error";
-                }
-
                 String line;
+
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
                 }
 
-            } catch (IOException e) {
+            } catch (Exception e) {
                 return "error";
             }
 
@@ -151,6 +147,7 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
                 Snackbar.make(findViewById(R.id.ItemSelectionLayout), "Done", Snackbar.LENGTH_LONG).show();
             } else {
                 Snackbar.make(findViewById(R.id.ItemSelectionLayout), "Please try again", Snackbar.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&location=" + sp.getString("location", "") + "&items=" + finalDonate + "&description=" + description, Toast.LENGTH_LONG).show();
             }
         }
     }
