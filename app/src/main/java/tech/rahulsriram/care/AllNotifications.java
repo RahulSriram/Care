@@ -170,19 +170,8 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                settings();
-                return true;
-            default:
+        startActivity(new Intent(AllNotifications.this, SettingsActivity.class));
                 return false;
-        }
-    }
-
-    public void settings() {
-        Dialog dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialogbox);
-        dialog.show();
     }
 
     //TODO: Gesture
@@ -238,7 +227,6 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
-            sb.append("aaa");
             String link = "http://10.0.0.20:8000/donation";
             String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius"+sp.getString("radius","")+"&status+"+sp.getString("status","");//TODO:number,name,latitude,longitude,item,description
             try {
