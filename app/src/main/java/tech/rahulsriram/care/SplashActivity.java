@@ -12,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by SREEVATHSA on 22-08-2016.
@@ -32,34 +33,30 @@ public class SplashActivity extends AppCompatActivity{
     class SplashTask extends AsyncTask<String,Void,String> {
         @Override
         protected String doInBackground(String ...var) {
-            if (!sp.getString("id", "").isEmpty() && !sp.getString("number", "").isEmpty()) {
-                if (!sp.getString("name", "").isEmpty()) {
+            if (!sp.getString("id", "").isEmpty() && !sp.getString("number", "").isEmpty() && !sp.getString("name", "").isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+
+                try {
                     String link = "http://10.0.0.20:8000/login";
-                    String data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "");
-                    StringBuilder sb = new StringBuilder();
+                    String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8");
+                    URL url = new URL(link);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    OutputStreamWriter writer = new OutputStreamWriter(httpURLConnection.getOutputStream());
+                    writer.write(data);
+                    writer.flush();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                    String line;
 
-                    try {
-                        URL url = new URL(link);
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                        httpURLConnection.setRequestMethod("POST");
-                        OutputStreamWriter writer = new OutputStreamWriter(httpURLConnection.getOutputStream());
-                        writer.write(data);
-                        writer.flush();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
-                        String line;
-
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line);
-                        }
-                        httpURLConnection.disconnect();
-                    } catch (Exception e) {
-                        return "error";
+                    while ((line = reader.readLine()) != null) {
+                        sb.append(line);
                     }
-
-                    return sb.toString();
-                } else {
-                    return "name-empty";
+                    httpURLConnection.disconnect();
+                } catch (Exception e) {
+                    return "error";
                 }
+
+                return sb.toString();
             } else {
                 return "error";
             }
@@ -67,13 +64,9 @@ public class SplashActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.i(TAG, "postexecute");
 
             if (result.equals("ok")) {
                 startActivity(new Intent(SplashActivity.this, AllNotifications.class));
-                finish();
-            } else if (result.equals("name-empty")) {
-                startActivity(new Intent(SplashActivity.this, NameInput.class));
                 finish();
             } else {
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));

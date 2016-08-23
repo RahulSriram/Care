@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class NameInput extends AppCompatActivity {
     String TAG = "care-logger";
@@ -56,20 +57,23 @@ public class NameInput extends AppCompatActivity {
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("name", name);
             editor.apply();
-            new SetNameTask().execute();
+            new SetNameTask(NameInput.this).execute();
         }
 
-        return true;
+        return false;
     }
 
     class SetNameTask extends AsyncTask<String,Void,String> {
         Context context;
         ProgressDialog dialog = null;
 
+        SetNameTask(Context c) {
+            context = c;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Log.i(TAG,"preexecute");
             dialog=new ProgressDialog(context);
             dialog.setMessage("Setting up account");
             dialog.show();
@@ -78,11 +82,11 @@ public class NameInput extends AppCompatActivity {
 
         @Override
         protected String doInBackground(String ...var) {
-            String link = "http://10.0.0.20:8000/set_name";
-            String data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&name=" + sp.getString("name", "");
             StringBuilder sb = new StringBuilder();
 
             try {
+                String link = "http://10.0.0.20:8000/set_name";
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&name=" + URLEncoder.encode(sp.getString("name", ""), "UTF-8");
                 URL url= new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
@@ -106,13 +110,14 @@ public class NameInput extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            Log.i(TAG, "postexecute");
 
             if (result.equals("ok")) {
                 startActivity(new Intent(NameInput.this, AllNotifications.class));
+                finish();
             } else {
                 Snackbar.make(findViewById(R.id.NameInputLayout), "Couldn't set name. Try again", Snackbar.LENGTH_LONG).show();
             }
+
             dialog.dismiss();
         }
     }

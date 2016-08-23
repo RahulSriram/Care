@@ -15,12 +15,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.net.URLEncoder;
 
 public class LoginActivity extends AppCompatActivity {
     String TAG = "care-logger";
@@ -70,7 +76,6 @@ public class LoginActivity extends AppCompatActivity {
 
         if (number.length() >= 12) {
             new RequestSms(LoginActivity.this).execute();
-            Log.i(TAG, "on button click");
         } else {
             Snackbar.make(findViewById(R.id.LoginLayout), "Please type your mobile number", Snackbar.LENGTH_LONG).show();
         }
@@ -96,12 +101,12 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected String doInBackground(Void... params) {
-            String link = "10.0.0.20:8000/request_sms";
-            String data = "number=" + sp.getString("number", "");
             StringBuilder sb = new StringBuilder();
 
             try {
-                URL url= new URL(link);
+                String link = "http://10.0.0.20:8000/request_sms";
+                String data = "number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8");
+                URL url = new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                 httpURLConnection.setRequestMethod("POST");
                 OutputStreamWriter writer = new OutputStreamWriter(httpURLConnection.getOutputStream());
@@ -109,12 +114,13 @@ public class LoginActivity extends AppCompatActivity {
                 writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
                 String line;
-                while((line = reader.readLine()) != null) {
+                while ((line = reader.readLine()) != null) {
                     sb.append(line);
+                    Log.i(TAG, line);
                 }
                 httpURLConnection.disconnect();
             } catch (Exception e) {
-                return "error";
+
             }
 
             return sb.toString();
@@ -126,9 +132,12 @@ public class LoginActivity extends AppCompatActivity {
 
             if (result.equals("ok")) {
                 startActivity(new Intent(LoginActivity.this, SmsVerificationActivity.class));
+                finish();
             } else {
                 Snackbar.make(findViewById(R.id.LoginLayout), "Please try again", Snackbar.LENGTH_LONG).show();
             }
+
+            dialog.dismiss();
         }
     }
 }

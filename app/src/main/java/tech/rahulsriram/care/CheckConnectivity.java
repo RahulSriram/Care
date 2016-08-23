@@ -38,7 +38,7 @@ public class CheckConnectivity {
         NotificationManager mNotificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         PendingIntent pi = PendingIntent.getActivity(context.getApplicationContext(), 0, intentI, 0);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context.getApplicationContext());
-        mBuilder.setSmallIcon(R.drawable.a);
+        mBuilder.setSmallIcon(R.drawable.notification_icon);
         mBuilder.setContentTitle("Notification");
         if (!("nil".equals(a = checkconnectivity(context)))) {
             if(isMyServiceRunning(CareService.class, context))/*"myservice".equals(check=sharedPreferences.getString("servicename","n/a")))*/{
