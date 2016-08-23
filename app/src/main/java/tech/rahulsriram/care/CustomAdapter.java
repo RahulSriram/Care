@@ -54,7 +54,7 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
         TextView textViewIcon = holder.textViewIcon;
 
         textViewName.setText(dataSet.get(listPosition).getName());
-        textViewVersion.setText(dataSet.get(listPosition).getVersion());
+        textViewVersion.setText(dataSet.get(listPosition).getItem());
         textViewIcon.setText(dataSet.get(listPosition).getDescription());
     }
 

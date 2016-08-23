@@ -5,21 +5,39 @@ package tech.rahulsriram.care;
  */
 public class DataModel {
 
+    String number;
     String name;
+    String latitude;
+    String longitude;
     String item;
     String description;
 
-    public DataModel(String name, String version, String id_) {
+    public DataModel(String number,String name,String latitude,String longitude,String version, String id_) {
+        this.number=number;
         this.name = name;
+        this.latitude=latitude;
+        this.longitude=longitude;
         this.item = version;
         this.description = id_;
+    }
+
+    public String getNumber() {
+        return number;
     }
 
     public String getName() {
         return name;
     }
 
-    public String getVersion() {
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public String getItem() {
         return item;
     }
 
