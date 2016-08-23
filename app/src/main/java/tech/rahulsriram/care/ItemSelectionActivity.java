@@ -1,8 +1,11 @@
 package tech.rahulsriram.care;
 
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +14,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +28,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class ItemSelectionActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
+public class ItemSelectionActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     ArrayList<String> selection = new ArrayList<>();
     String description, finalDonate;
     EditText itemDescription;
@@ -152,4 +159,31 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
         }
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        if (location != null) {
+            if (location.hasAccuracy()) {
+                SharedPreferences sp = getSharedPreferences("Care", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+
+                editor.putString("location", location.getLatitude() + "," + location.getLongitude());
+                editor.apply();
+            }
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
 }

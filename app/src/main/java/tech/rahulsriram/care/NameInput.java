@@ -113,6 +113,7 @@ public class NameInput extends AppCompatActivity {
 
             if (result.equals("ok")) {
                 startActivity(new Intent(NameInput.this, AllNotifications.class));
+                startService(new Intent(NameInput.this, CareService.class));
                 finish();
             } else {
                 Snackbar.make(findViewById(R.id.NameInputLayout), "Couldn't set name. Try again", Snackbar.LENGTH_LONG).show();
