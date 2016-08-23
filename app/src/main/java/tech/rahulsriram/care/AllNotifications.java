@@ -47,13 +47,13 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     static RecyclerView recyclerView1;
     static ArrayList<DataModel> data1;
 
-    String[] name0 = new String[50];
-    String[] description0 = new String[50];
-    String[] item0 = new String[50];
+    ArrayList<String> name0 = new ArrayList<>();
+    ArrayList<String> description0 = new ArrayList<>();
+    ArrayList<String> item0 = new ArrayList<>();
 
-    String[] name1 = new String[50];
-    String[] description1 = new String[50];
-    String[] item1 = new String[50];
+    ArrayList<String> name1 = new ArrayList<>();
+    ArrayList<String> description1 = new ArrayList<>();
+    ArrayList<String> item1 = new ArrayList<>();
 
     TabHost tabHost;
     GestureDetector gestureDetector;
@@ -238,6 +238,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
+            sb.append("aaa");
             String link = "http://10.0.0.20:8000/donation";
             String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius"+sp.getString("radius","")+"&status+"+sp.getString("status","");//TODO:number,name,latitude,longitude,item,description
             try {
@@ -253,7 +254,11 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((data = reader.readLine()) != null) {
                     Log.i(Jebin, "while");
+                    String[] data1=data.split(",");
                     sb.append(data);
+                    name1.add(data1[1]);
+                    item1.add(data1[4]);
+                    description1.add(data1[5]);
                 }
                 conn.disconnect();
             } catch (Exception e) {
@@ -263,20 +268,11 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         }
 
         protected void onPostExecute(String result) {
-            int i1;
-            separated1 = result.split(";");
-            for(i1=0;i1<separated1.length;i1++)
-            separated11[i1]=separated1[i1].split(",");
-            for(int i=0;i<separated1.length;i++){
-            name1[i]=separated11[i][1];
-            item1[i]=separated11[i][4];
-            description1[i]=separated11[i][5];
-            }
-            data1=new ArrayList<DataModel>();
+            data1=new ArrayList<>();
             for(int j = 0; j<2;j++)
             {
                 Log.i(Jebin, "datamodel");
-                data1.add(new DataModel(name1[j], item1[j], description1[j]));
+                data1.add(new DataModel(name1.get(j), item1.get(j), description1.get(j)));
             }
 
             adapter1=new CustomAdapter(data1);
@@ -307,7 +303,11 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line = reader.readLine()) != null) {
                     Log.i(Jebin, "while");
+                    String[] line0=data.split(",");
                     sb.append(line);
+                    name0.add(line0[1]);
+                    item0.add(line0[4]);
+                    description0.add(line0[5]);
                 }
                 conn.disconnect();
             } catch (Exception e) {
@@ -317,20 +317,11 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         }
 
         protected void onPostExecute(String result) {
-            int i1;
-            separated0 = result.split(";");
-            for(i1=0;i1<separated0.length;i1++)
-                separated10[i1]=separated0[i1].split(",");
-            for(int i=0;i<separated0.length;i++){
-                name0[i]=separated10[i][1];
-                item0[i]=separated10[i][4];
-                description0[i]=separated10[i][5];
-            }
-            data0=new ArrayList<DataModel>();
+            data0=new ArrayList<>();
             for(int j = 0; j<2;j++)
             {
                 Log.i(Jebin, "datamodel");
-                data0.add(new DataModel(name0[j], item0[j], description0[j]));
+                data0.add(new DataModel(name0.get(j), item0.get(j), description0.get(j)));
             }
 
             adapter0=new CustomAdapter(data0);
