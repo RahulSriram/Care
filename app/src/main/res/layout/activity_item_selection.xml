@@ -127,19 +127,15 @@
         app:fabSize="normal"
         app:layout_anchorGravity="end|bottom"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"/>
+        android:layout_alignParentEnd="true" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/itemDescription"
-        android:layout_alignBottom="@+id/donateButton"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@+id/donateButton"
-        android:layout_toStartOf="@+id/donateButton"
         android:hint="@string/enter_item_description"
-        android:maxLength="140" />
+        android:maxLength="140"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/donateButton" />
 </RelativeLayout>
