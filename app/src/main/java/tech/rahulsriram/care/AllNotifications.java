@@ -347,14 +347,15 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         }
 
         protected void onPostExecute(String result) {
-            data1=new ArrayList<>();
-            for(int j = 0; j<name1.size();j++)
-            {
-                data1.add(new DataModel(number1.get(j),name1.get(j),latitude1.get(j),longitude1.get(j), item1.get(j), description1.get(j)));
-            }
+            if(result!="error") {
+                data1 = new ArrayList<>();
+                for (int j = 0; j < name1.size(); j++) {
+                    data1.add(new DataModel(number1.get(j), name1.get(j), latitude1.get(j), longitude1.get(j), item1.get(j), description1.get(j)));
+                }
 
-            adapter1=new CustomAdapter(data1);
-            recyclerView1.setAdapter(adapter1);
+                adapter1 = new CustomAdapter(data1);
+                recyclerView1.setAdapter(adapter1);
+            }
         }
     }
     class ClosedDonations extends AsyncTask<String, String, String> {
@@ -401,14 +402,15 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         }
 
         protected void onPostExecute(String result) {
-            data0=new ArrayList<>();
-            for(int j = 0; j< name0.size();j++)
-            {
-                data0.add(new DataModel(number0.get(j),name0.get(j),latitude0.get(j),longitude0.get(j), item0.get(j), description0.get(j)));
-            }
+            if(result!="error") {
+                data0 = new ArrayList<>();
+                for (int j = 0; j < name0.size(); j++) {
+                    data0.add(new DataModel(number0.get(j), name0.get(j), latitude0.get(j), longitude0.get(j), item0.get(j), description0.get(j)));
+                }
 
-            adapter0=new CustomAdapter(data0);
-            recyclerView0.setAdapter(adapter0);
+                adapter0 = new CustomAdapter(data0);
+                recyclerView0.setAdapter(adapter0);
+            }
         }
     }
 }
