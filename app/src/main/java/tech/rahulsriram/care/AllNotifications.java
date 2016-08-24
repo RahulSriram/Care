@@ -11,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 public class AllNotifications extends AppCompatActivity implements View.OnClickListener,GestureDetector.OnGestureListener {
     public static View.OnClickListener myOnClickListener;
     Button button0, button1;
-    String device_id,Jebin="careLog";
 
     static RecyclerView.Adapter adapter0;
     RecyclerView.LayoutManager layoutManager0;
@@ -65,14 +63,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     GestureDetector gestureDetector;
 
     SharedPreferences sp;
-    String location1;
-    String[] location2;
 
-    String[] separated10[]=new String[20][20];
-    String[] separated0;
-
-    String[] separated11[]=new String[20][20];
-    String[] separated1;
     String la,lo;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -96,7 +87,55 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         number0.add("number0");
         latitude0.add("46.2276");
         longitude0.add("2.2137");
+        name0.add("name0");
+        description0.add("descritpion0");
+        item0.add("item0");
+        number0.add("number0");
+        latitude0.add("46.2276");
+        longitude0.add("2.2137");
+        name0.add("name0");
+        description0.add("descritpion0");
+        item0.add("item0");
+        number0.add("number0");
+        latitude0.add("46.2276");
+        longitude0.add("2.2137");
+        name0.add("name0");
+        description0.add("descritpion0");
+        item0.add("item0");
+        number0.add("number0");
+        latitude0.add("46.2276");
+        longitude0.add("2.2137");
+        name0.add("name0");
+        description0.add("descritpion0");
+        item0.add("item0");
+        number0.add("number0");
+        latitude0.add("46.2276");
+        longitude0.add("2.2137");
 
+        name1.add("name1");
+        description1.add("descritpion1");
+        item1.add("item1");
+        number1.add("number1");
+        latitude1.add("46.2276");
+        longitude1.add("2.2137");
+        name1.add("name1");
+        description1.add("descritpion1");
+        item1.add("item1");
+        number1.add("number1");
+        latitude1.add("46.2276");
+        longitude1.add("2.2137");
+        name1.add("name1");
+        description1.add("descritpion1");
+        item1.add("item1");
+        number1.add("number1");
+        latitude1.add("46.2276");
+        longitude1.add("2.2137");
+        name1.add("name1");
+        description1.add("descritpion1");
+        item1.add("item1");
+        number1.add("number1");
+        latitude1.add("46.2276");
+        longitude1.add("2.2137");
         name1.add("name1");
         description1.add("descritpion1");
         item1.add("item1");
@@ -173,21 +212,8 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
         @Override
         public void onClick(View v) {
-            if(!(tabHost.getCurrentTab()==0)) {
-//                int selectedItemPosition0 = recyclerView0.getChildPosition(v);
-//                RecyclerView.ViewHolder viewHolder0
-//                        = recyclerView0.findViewHolderForPosition(selectedItemPosition0);
-//                TextView textViewIcon0 = (TextView) viewHolder0.itemView.findViewById(R.id.textViewIcon);
-//                String selectedName0 = (String) textViewIcon0.getText();
-//                for(int i=0;i<description0.size();i++) {
-//                    if (selectedName0.equals(description0.get(i))) {
-//                        la = latitude0.get(i);
-//                        lo = longitude0.get(i);
-//                        Log.i(Jebin,la+lo+"0000");
-//                    }
-//                }
-//            }
-//            else {
+            if((tabHost.getCurrentTab()==1)) {
+                int a11=tabHost.getCurrentTab();
                 int selectedItemPosition1 = recyclerView1.getChildPosition(v);
                 RecyclerView.ViewHolder viewHolder1
                         = recyclerView1.findViewHolderForPosition(selectedItemPosition1);
@@ -197,21 +223,17 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                     if (selectedName1.equals(description1.get(i))) {
                         la = latitude1.get(i);
                         lo = longitude1.get(i);
-                        Log.i(Jebin,la+lo+"1111");
                     }
                 }
+                Uri gmmIntentUri = Uri.parse("google.navigation:q="+la+","+lo);
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
             }
-            Log.i(Jebin,"mapp");
-            Uri gmmIntentUri = Uri.parse("google.navigation:q="+la+","+lo);
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
-            startActivity(mapIntent);
 
         }
     }
-    //TODO: end of onCreate
 
-    //TODO:Onbutton click
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button0:
@@ -298,7 +320,6 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
             String link = "http://10.0.0.20:8000/recent_history",line1;
             String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius="+sp.getString("radius","")+"&status=+open";//TODO:number,name,latitude,longitude,item,description
             try {
-                Log.i(Jebin, "doInBackground");
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(10);
@@ -309,7 +330,6 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                 writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line1 = reader.readLine()) != null) {
-                    Log.i(Jebin, "while");
                     String[] line11=line1.split(",");
                     sb.append(data);
                     number1.add(line11[0]);
@@ -328,15 +348,13 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
         protected void onPostExecute(String result) {
             data1=new ArrayList<>();
-            for(int j = 0; j<2;j++)
+            for(int j = 0; j<name1.size();j++)
             {
-                Log.i(Jebin, "datamodel");
                 data1.add(new DataModel(number1.get(j),name1.get(j),latitude1.get(j),longitude1.get(j), item1.get(j), description1.get(j)));
             }
 
             adapter1=new CustomAdapter(data1);
             recyclerView1.setAdapter(adapter1);
-            Log.i(Jebin,"call to adapter");
         }
     }
     class ClosedDonations extends AsyncTask<String, String, String> {
@@ -356,7 +374,6 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
             String link = "http://10.0.0.20:8000/recent_history",line0;
             String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius="+sp.getString("radius","")+"&status=closed";
             try {
-                Log.i(Jebin, "doInBackground");
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(10);
@@ -367,7 +384,6 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                 writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line0 = reader.readLine()) != null) {
-                    Log.i(Jebin, "while");
                     String[] line00=data.split(",");
                     sb.append(line0);
                     number0.add(line00[0]);
@@ -388,13 +404,11 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
             data0=new ArrayList<>();
             for(int j = 0; j< name0.size();j++)
             {
-                Log.i(Jebin, "datamodel");
                 data0.add(new DataModel(number0.get(j),name0.get(j),latitude0.get(j),longitude0.get(j), item0.get(j), description0.get(j)));
             }
 
             adapter0=new CustomAdapter(data0);
             recyclerView0.setAdapter(adapter0);
-            Log.i(Jebin,"call to adapter");
         }
     }
 }

@@ -31,7 +31,7 @@
                 <RelativeLayout
                     android:id="@+id/linearLayout0"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <Button
@@ -43,9 +43,10 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/my_recycler_view0"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:scrollbars="vertical"
-                        android:layout_below="@+id/button0"/>
+                        android:layout_below="@+id/button0"
+                        android:layout_alignParentBottom="true" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:layout_width="wrap_content"

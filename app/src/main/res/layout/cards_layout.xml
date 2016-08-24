@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:tag="cards main container">
+    android:tag="cards main container"
+    >
 
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
@@ -11,48 +12,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         card_view:cardBackgroundColor="#ffffff"
-        card_view:cardCornerRadius="10dp"
         card_view:cardElevation="5dp"
-        card_view:cardUseCompatPadding="true">
+        card_view:cardUseCompatPadding="true"   >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <TextView
+                android:id="@+id/textViewName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:text="Name"
+                android:textAppearance="?android:attr/textAppearanceLarge"/>
+
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:layout_weight="2"
                 android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textViewIcon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginRight="0dp"
-                    android:text="Android Name"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
-
-                <TextView
-                    android:id="@+id/textViewName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="0dp"
-                    android:text="Android Name"
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                 <TextView
                     android:id="@+id/textViewVersion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="0dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Item"
+                    android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-                    android:text="Android Version"
+                <TextView
+                    android:id="@+id/textViewIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="10dp"
+                    android:text="Description"
                     android:textAppearance="?android:attr/textAppearanceMedium"/>
 
             </LinearLayout>
