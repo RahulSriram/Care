@@ -5,6 +5,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="tech.rahulsriram.care.AllNotifications">
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <TabHost
         android:layout_width="match_parent"
@@ -34,18 +38,11 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:text="@string/view"
-                        android:id="@+id/button0"
-                        android:layout_gravity="center_horizontal" />
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/my_recycler_view0"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:scrollbars="vertical"
-                        android:layout_below="@+id/button0"
                         android:layout_alignParentBottom="true" />
 
                     <android.support.design.widget.FloatingActionButton
@@ -72,15 +69,7 @@
                         android:id="@+id/my_recycler_view1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scrollbars="vertical"
-                        android:layout_below="@+id/button1"/>
-
-                    <Button
-                        android:layout_width="match_parent"
-                        android:layout_height="40dp"
-                        android:text="@string/view"
-                        android:id="@+id/button1"
-                        android:layout_gravity="center_horizontal" />
+                        android:scrollbars="vertical" />
 
                     <android.support.design.widget.FloatingActionButton
                         android:layout_width="wrap_content"
@@ -99,4 +88,5 @@
             </FrameLayout>
         </LinearLayout>
     </TabHost>
+</android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>

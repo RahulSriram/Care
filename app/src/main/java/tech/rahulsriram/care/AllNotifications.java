@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +18,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -31,9 +31,8 @@ import java.util.ArrayList;
 /**
  * Created by Jebin on 24-07-2016.
  */
-public class AllNotifications extends AppCompatActivity implements View.OnClickListener,GestureDetector.OnGestureListener {
+public class AllNotifications extends AppCompatActivity implements GestureDetector.OnGestureListener {
     public static View.OnClickListener myOnClickListener;
-    Button button0, button1;
 
     static RecyclerView.Adapter adapter0;
     RecyclerView.LayoutManager layoutManager0;
@@ -62,6 +61,8 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     TabHost tabHost;
     GestureDetector gestureDetector;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
     SharedPreferences sp;
 
     String la,lo;
@@ -74,6 +75,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
         gestureDetector = new GestureDetector(this);
 
+        swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
 
         name0.add("name0");
         description0.add("descritpion0");
@@ -151,21 +153,18 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
 
 
-        button0 = (Button) findViewById(R.id.button0);
-        button0.setOnClickListener(this);
         recyclerView0 = (RecyclerView) findViewById(R.id.my_recycler_view0);
         recyclerView0.setHasFixedSize(true);
         layoutManager0 = new LinearLayoutManager(this);
         recyclerView0.setLayoutManager(layoutManager0);
         recyclerView0.setItemAnimator(new DefaultItemAnimator());
 
-        button1 = (Button) findViewById(R.id.button1);
-        button1.setOnClickListener(this);
         recyclerView1 = (RecyclerView) findViewById(R.id.my_recycler_view1);
         recyclerView1.setHasFixedSize(true);
         layoutManager1 = new LinearLayoutManager(this);
         recyclerView1.setLayoutManager(layoutManager1);
         recyclerView1.setItemAnimator(new DefaultItemAnimator());
+
         myOnClickListener = new MyOnClickListener(this);
 
         tabHost = (TabHost) findViewById(R.id.tabHost);
@@ -184,6 +183,10 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         tabHost.addTab(tabSpec);
         tabHost.setCurrentTab(0);
 
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary),
+                getResources().getColor(R.color.colorPrimaryDark),
+                getResources().getColor(R.color.colorAccent));
+
         FloatingActionButton donate0 = (FloatingActionButton) findViewById(R.id.donateButton0);
         assert donate0 != null;
         donate0.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +204,32 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
                 startActivity(new Intent(AllNotifications.this, ItemSelectionActivity.class));
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(tabHost.getCurrentTab()==0){
+                    new ClosedDonations().execute();
+                    swipeRefreshLayout.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    },3000);
+                }
+                else{
+                    new OpenDonations().execute();
+                    swipeRefreshLayout.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    },3000);
+                }
+            }
+        });
     }
+
     class MyOnClickListener implements View.OnClickListener {
 
         private final Context context;
@@ -234,17 +262,6 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.button0:
-                new ClosedDonations().execute();
-                break;
-            case R.id.button1:
-                new OpenDonations().execute();
-                break;
-
-        }
-    }
 
     //TODO: Menu
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -306,12 +323,12 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
     class OpenDonations extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
-            number1.clear();
-            name1.clear();
-            latitude1.clear();
-            longitude1.clear();
-            item1.clear();
-            description1.clear();
+//            number1.clear();
+//            name1.clear();
+//            latitude1.clear();
+//            longitude1.clear();
+//            item1.clear();
+//            description1.clear();
         }
 
         @Override
@@ -347,7 +364,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         }
 
         protected void onPostExecute(String result) {
-            if(result!="error") {
+//            if(result!="error") {
                 data1 = new ArrayList<>();
                 for (int j = 0; j < name1.size(); j++) {
                     data1.add(new DataModel(number1.get(j), name1.get(j), latitude1.get(j), longitude1.get(j), item1.get(j), description1.get(j)));
@@ -355,18 +372,18 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
                 adapter1 = new CustomAdapter(data1);
                 recyclerView1.setAdapter(adapter1);
-            }
+//            }
         }
     }
     class ClosedDonations extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
-            number0.clear();
-            name0.clear();
-            latitude0.clear();
-            longitude0.clear();
-            item0.clear();
-            description0.clear();
+//            number0.clear();
+//            name0.clear();
+//            latitude0.clear();
+//            longitude0.clear();
+//            item0.clear();
+//            description0.clear();
         }
 
         @Override
@@ -402,7 +419,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
         }
 
         protected void onPostExecute(String result) {
-            if(result!="error") {
+//            if(result!="error") {
                 data0 = new ArrayList<>();
                 for (int j = 0; j < name0.size(); j++) {
                     data0.add(new DataModel(number0.get(j), name0.get(j), latitude0.get(j), longitude0.get(j), item0.get(j), description0.get(j)));
@@ -410,7 +427,7 @@ public class AllNotifications extends AppCompatActivity implements View.OnClickL
 
                 adapter0 = new CustomAdapter(data0);
                 recyclerView0.setAdapter(adapter0);
-            }
+//            }
         }
     }
 }
