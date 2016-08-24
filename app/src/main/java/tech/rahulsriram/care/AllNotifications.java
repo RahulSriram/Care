@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
@@ -241,7 +242,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         @Override
         public void onClick(View v) {
             if((tabHost.getCurrentTab()==1)) {
-                int a11=tabHost.getCurrentTab();
                 int selectedItemPosition1 = recyclerView1.getChildPosition(v);
                 RecyclerView.ViewHolder viewHolder1
                         = recyclerView1.findViewHolderForPosition(selectedItemPosition1);
@@ -323,20 +323,20 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     class OpenDonations extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
-//            number1.clear();
-//            name1.clear();
-//            latitude1.clear();
-//            longitude1.clear();
-//            item1.clear();
-//            description1.clear();
+            number1.clear();
+            name1.clear();
+            latitude1.clear();
+            longitude1.clear();
+            item1.clear();
+            description1.clear();
         }
 
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
             String link = "http://10.0.0.20:8000/recent_history",line1;
-            String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius="+sp.getString("radius","")+"&status=+open";//TODO:number,name,latitude,longitude,item,description
             try {
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=+open";//TODO:number,name,latitude,longitude,item,description
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(10);
@@ -364,7 +364,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
-//            if(result!="error") {
+            if(result!="error") {
                 data1 = new ArrayList<>();
                 for (int j = 0; j < name1.size(); j++) {
                     data1.add(new DataModel(number1.get(j), name1.get(j), latitude1.get(j), longitude1.get(j), item1.get(j), description1.get(j)));
@@ -372,26 +372,26 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
                 adapter1 = new CustomAdapter(data1);
                 recyclerView1.setAdapter(adapter1);
-//            }
+            }
         }
     }
     class ClosedDonations extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
-//            number0.clear();
-//            name0.clear();
-//            latitude0.clear();
-//            longitude0.clear();
-//            item0.clear();
-//            description0.clear();
+            number0.clear();
+            name0.clear();
+            latitude0.clear();
+            longitude0.clear();
+            item0.clear();
+            description0.clear();
         }
 
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
             String link = "http://10.0.0.20:8000/recent_history",line0;
-            String data = "id=" + sp.getString("id","") + "&number=" + sp.getString("number","")+"&location="+sp.getString("location","")+"&radius="+sp.getString("radius","")+"&status=closed";
             try {
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=+closed";//TODO:number,name,latitude,longitude,item,description
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(10);
@@ -419,7 +419,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
-//            if(result!="error") {
+            if(result!="error") {
                 data0 = new ArrayList<>();
                 for (int j = 0; j < name0.size(); j++) {
                     data0.add(new DataModel(number0.get(j), name0.get(j), latitude0.get(j), longitude0.get(j), item0.get(j), description0.get(j)));
@@ -427,7 +427,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
                 adapter0 = new CustomAdapter(data0);
                 recyclerView0.setAdapter(adapter0);
-//            }
+            }
         }
     }
 }

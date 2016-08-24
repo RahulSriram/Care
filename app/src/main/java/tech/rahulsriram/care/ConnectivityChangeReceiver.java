@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 
 public class ConnectivityChangeReceiver extends BroadcastReceiver {
@@ -78,8 +79,8 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
             String link = "http://10.0.0.20:8000/recent_history", line1, b1;
-            String data = "id=" + sp.getString("id", "") + "&number=" + sp.getString("number", "") + "&location=" + sp.getString("location", "") + "&radius=" + sp.getString("radius", "") + "&status=+open";//TODO:number,name,latitude,longitude,item,description
             try {
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=+open";//TODO:number,name,latitude,longitude,item,description
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(10);
