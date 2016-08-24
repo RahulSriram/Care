@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:text="Set update interval (in minutes)"
+        android:text="Set update rate (in minutes)"
         android:id="@+id/update_interval_text"
         android:paddingTop="10dp"
         android:textSize="20dp"
@@ -33,11 +33,11 @@
         android:layout_alignParentStart="true" />
 
     <Spinner
-        android:layout_width="50dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:id="@+id/update_interval"
         android:layout_alignTop="@+id/update_interval_text"
-        android:layout_alignStart="@+id/radius" />
+        android:layout_toEndOf="@+id/update_interval_text" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -48,12 +48,17 @@ public class SettingsActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         updateIntervalSpinner.setAdapter(adapter);
         updateIntervalSpinner.setSelection(updateInterval.indexOf(sp.getInt("update_interval", 15)));
-        updateIntervalSpinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        updateIntervalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putInt("update_interval", (Integer) updateIntervalSpinner.getSelectedItem());
                 editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //TODO: empty-stub method
             }
         });
 
@@ -69,5 +74,11 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

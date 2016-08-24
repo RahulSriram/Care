@@ -29,9 +29,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-/**
- * Created by Jebin on 24-07-2016.
- */
 public class AllNotifications extends AppCompatActivity implements GestureDetector.OnGestureListener {
     public static View.OnClickListener myOnClickListener;
 
@@ -336,7 +333,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             StringBuilder sb = new StringBuilder();
             String link = "http://10.0.0.20:8000/recent_history",line1;
             try {
-                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=+open";//TODO:number,name,latitude,longitude,item,description
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=open";//TODO:number,name,latitude,longitude,item,description
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(10);
@@ -364,7 +361,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
-            if(result!="error") {
+            if(!result.equals("error")) {
                 data1 = new ArrayList<>();
                 for (int j = 0; j < name1.size(); j++) {
                     data1.add(new DataModel(number1.get(j), name1.get(j), latitude1.get(j), longitude1.get(j), item1.get(j), description1.get(j)));
@@ -391,7 +388,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             StringBuilder sb = new StringBuilder();
             String link = "http://10.0.0.20:8000/recent_history",line0;
             try {
-                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=+closed";//TODO:number,name,latitude,longitude,item,description
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=closed";//TODO:number,name,latitude,longitude,item,description
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setConnectTimeout(10);
@@ -419,7 +416,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
-            if(result!="error") {
+            if(!result.equals("error")) {
                 data0 = new ArrayList<>();
                 for (int j = 0; j < name0.size(); j++) {
                     data0.add(new DataModel(number0.get(j), name0.get(j), latitude0.get(j), longitude0.get(j), item0.get(j), description0.get(j)));
