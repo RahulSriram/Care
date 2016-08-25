@@ -323,12 +323,12 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     class OpenDonations extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
-//            number1.clear();
-//            name1.clear();
-//            latitude1.clear();
-//            longitude1.clear();
-//            item1.clear();
-//            description1.clear();
+            number1.clear();
+            name1.clear();
+            latitude1.clear();
+            longitude1.clear();
+            item1.clear();
+            description1.clear();
         }
 
         @Override
@@ -364,7 +364,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
-//            if(result!="error") {
+            if(result!="error") {
                 data1 = new ArrayList<>();
                 for (int j = 0; j < name1.size(); j++) {
                     data1.add(new DataModel(number1.get(j), name1.get(j), latitude1.get(j), longitude1.get(j), item1.get(j), description1.get(j)));
@@ -372,18 +372,18 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
                 adapter1 = new CustomAdapter(data1);
                 recyclerView1.setAdapter(adapter1);
-//            }
+            }
         }
     }
     class ClosedDonations extends AsyncTask<String, String, String> {
 
         protected void onPreExecute() {
-//            number0.clear();
-//            name0.clear();
-//            latitude0.clear();
-//            longitude0.clear();
-//            item0.clear();
-//            description0.clear();
+            number0.clear();
+            name0.clear();
+            latitude0.clear();
+            longitude0.clear();
+            item0.clear();
+            description0.clear();
         }
 
         @Override
@@ -419,7 +419,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
-//            if(result!="error") {
+            if(result!="error") {
                 data0 = new ArrayList<>();
                 for (int j = 0; j < name0.size(); j++) {
                     data0.add(new DataModel(number0.get(j), name0.get(j), latitude0.get(j), longitude0.get(j), item0.get(j), description0.get(j)));
@@ -427,7 +427,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
                 adapter0 = new CustomAdapter(data0);
                 recyclerView0.setAdapter(adapter0);
-//            }
+            }
         }
     }
 }
