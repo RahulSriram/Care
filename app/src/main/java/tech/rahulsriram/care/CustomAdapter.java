@@ -19,14 +19,14 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView textViewName;
-        TextView textViewVersion;
-        TextView textViewIcon;
+        TextView textItem;
+        TextView textDescription;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             this.textViewName = (TextView) itemView.findViewById(R.id.textViewName);
-            this.textViewVersion = (TextView) itemView.findViewById(R.id.textViewVersion);
-            this.textViewIcon = (TextView) itemView.findViewById(R.id.textViewIcon);
+            this.textItem = (TextView) itemView.findViewById(R.id.textItem);
+            this.textDescription = (TextView) itemView.findViewById(R.id.textDescription);
         }
     }
 
@@ -50,12 +50,12 @@ class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
     public void onBindViewHolder(final MyViewHolder holder, final int listPosition) {
 
         TextView textViewName = holder.textViewName;
-        TextView textViewVersion = holder.textViewVersion;
-        TextView textViewIcon = holder.textViewIcon;
+        TextView textItem = holder.textItem;
+        TextView textDescription = holder.textDescription;
 
         textViewName.setText(dataSet.get(listPosition).getName());
-        textViewVersion.setText(dataSet.get(listPosition).getItem());
-        textViewIcon.setText(dataSet.get(listPosition).getDescription());
+        textItem.setText(dataSet.get(listPosition).getItem());
+        textDescription.setText(dataSet.get(listPosition).getDescription());
     }
 
     @Override

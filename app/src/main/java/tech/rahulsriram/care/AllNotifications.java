@@ -3,7 +3,6 @@ package tech.rahulsriram.care;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -183,7 +182,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         tabSpec.setIndicator("Open Donations");
         tabHost.addTab(tabSpec);
         tabHost.setCurrentTab(0);
-
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary),
                 getResources().getColor(R.color.colorPrimaryDark),
                 getResources().getColor(R.color.colorAccent));
@@ -245,23 +243,29 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 int selectedItemPosition1 = recyclerView1.getChildPosition(v);
                 RecyclerView.ViewHolder viewHolder1
                         = recyclerView1.findViewHolderForPosition(selectedItemPosition1);
-                TextView textViewIcon1 = (TextView) viewHolder1.itemView.findViewById(R.id.textViewIcon);
-                String selectedName1 = (String) textViewIcon1.getText();
+                TextView textDescription1 = (TextView) viewHolder1.itemView.findViewById(R.id.textDescription);
+                String selectedName1 = (String) textDescription1.getText();
                 for(int i=0;i<description1.size();i++) {
                     if (selectedName1.equals(description1.get(i))) {
                         la = latitude1.get(i);
                         lo = longitude1.get(i);
+                        SharedPreferences.Editor editor=sp.edit();
+                        editor.putString("tempuserla",la);
+                        editor.putString("tempuserlo",lo);
+                        editor.putString("tempusername1",name1.get(i));
+                        editor.putString("tempuserdescription1",description1.get(i));
+                        editor.putString("tempuseritem1",item1.get(i));
+                        editor.putString("tempusernumber1",number1.get(i));
+                        editor.apply();
+                        break;
                     }
                 }
-                Uri gmmIntentUri = Uri.parse("google.navigation:q="+la+","+lo);
-                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-                mapIntent.setPackage("com.google.android.apps.maps");
-                startActivity(mapIntent);
+                startActivity(new Intent(AllNotifications.this,Details.class));
+                onResume();
             }
 
         }
     }
-
 
     //TODO: Menu
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -272,12 +276,12 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
     public boolean onOptionsItemSelected(MenuItem item) {
         startActivity(new Intent(AllNotifications.this, SettingsActivity.class));
+        finish();
                 return false;
     }
 
     //TODO: Gesture
     public boolean onTouchEvent(MotionEvent m) {
-//        float lastX = 0;
         return gestureDetector.onTouchEvent(m);
     }
 
@@ -286,10 +290,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         //  Toast.makeText(this,"down swipe",Toast.LENGTH_LONG).show();
         return false;
     }
-    // public boolean onLeft  (MotionEvent e) {
-    //   Toast.makeText(this,"down swipe",Toast.LENGTH_LONG).show();
-    // return false;
-    //}
 
     @Override
     public void onShowPress(MotionEvent e) {

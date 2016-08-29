@@ -61,4 +61,13 @@
         android:layout_alignBaseline="@+id/radius_text"
         android:layout_alignBottom="@+id/radius_text"
         android:layout_alignParentEnd="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="GoBack"
+        android:id="@+id/backbutton"
+        android:layout_below="@+id/radius"
+        android:layout_toStartOf="@+id/update_interval"
+        android:layout_marginTop="62dp" />
 </RelativeLayout>
