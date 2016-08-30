@@ -276,8 +276,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
     public boolean onOptionsItemSelected(MenuItem item) {
         startActivity(new Intent(AllNotifications.this, SettingsActivity.class));
-        finish();
-                return false;
+        return false;
     }
 
     //TODO: Gesture
