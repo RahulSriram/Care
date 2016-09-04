@@ -29,6 +29,10 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
+        android.app.ActionBar actionBar=getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setIcon(R.id.);
+
         button=(Button)findViewById(R.id.backbutton);
         assert button != null;
         button.setOnClickListener(new View.OnClickListener() {

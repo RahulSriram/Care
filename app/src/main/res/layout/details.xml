@@ -10,43 +10,68 @@
 
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/detailtext1"
-        android:layout_gravity="center_horizontal" />
+        android:textSize="20dp"
+        android:text="Name:"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:textSize="20dp"
+        android:text="Item Type"
         android:id="@+id/detailtext2"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/detailtext1"/>
+        android:layout_below="@+id/detailtext1"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text="Description"
+        android:textSize="20dp"
         android:id="@+id/detailtext3"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/detailtext2"/>
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/detailtext2"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text=""
+        android:textSize="20dp"
         android:id="@+id/detailtext4"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/detailtext3"/>
+        android:layout_toRightOf="@+id/detailtext1"
+        android:layout_marginTop="10dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text=""
+        android:textSize="20dp"
         android:id="@+id/detailtext5"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/detailtext4"/>
+        android:layout_toRightOf="@+id/detailtext2"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/detailtext4"/>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="20dp"
+        android:id="@+id/detailtext6"
+        android:layout_gravity="center_horizontal"
+        android:layout_toRightOf="@+id/detailtext3"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/detailtext5"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
