@@ -31,68 +31,12 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class ItemSelectionActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
-    private static final String TAG = "care-logger";
-    private static final String LOCATION_PERMISSION_UNAVAILABLE_MSG = "Application needs Location Permissions to work";
+public class ItemSelectionActivity  extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener {
     private ArrayList<String> selection = new ArrayList<>();
     private String description, finalDonate;
     private EditText itemDescription;
     private SharedPreferences sp;
-    private GoogleApiClient mGoogleApiClient;
-    private LocationRequest mLocationRequest;
-    private Location lastKnownLocation;
 
-    protected synchronized void buildGoogleApiClient() {
-        Log.i(TAG, "buildGoogleApiClient()");
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-    }
-
-    protected void createLocationRequest() {
-        Log.i(TAG, "createLocationRequest()");
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setInterval(60*1000); //in milliseconds
-        mLocationRequest.setFastestInterval(60*1000); //in milliseconds
-        mLocationRequest.setSmallestDisplacement(10); //in meters
-    }
-
-    protected boolean checkPlayServices() {
-        Log.i(TAG, "checkPlayServices()");
-        int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
-        int result = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-
-        if (result != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(result)) {
-                GooglePlayServicesUtil.getErrorDialog(result, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "This device is not supported.", Toast.LENGTH_LONG).show();
-                finish();
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    protected void startLocationUpdates() {
-        Log.i(TAG, "startLocationUpdates()");
-        try {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        } catch (SecurityException e) {
-            Toast.makeText(getApplicationContext(), LOCATION_PERMISSION_UNAVAILABLE_MSG, Toast.LENGTH_LONG).show();
-            finish();
-        }
-    }
-
-    protected void stopLocationUpdates() {
-        Log.i(TAG, "stopLocationUpdates()");
-        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,11 +44,6 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
         setContentView(R.layout.activity_item_selection);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
-
-        if (checkPlayServices()) {
-            buildGoogleApiClient();
-            createLocationRequest();
-        }
 
         itemDescription = (EditText) findViewById(R.id.itemDescription);
 
@@ -134,7 +73,7 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
 
                 if (!description.isEmpty()) {
                     if (!finalDonate.isEmpty()) {
-                        if (lastKnownLocation != null) {
+                        if (!sp.getString("location", "").isEmpty()) {
                             new DonateTask().execute();
                         } else {
                             Snackbar.make(v, "Couldn't fetch your location. Please check if your GPS is on", Snackbar.LENGTH_LONG).show();
@@ -147,37 +86,6 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
                 }
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (mGoogleApiClient != null) {
-            mGoogleApiClient.connect();
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkPlayServices();
-        if (mGoogleApiClient.isConnected()) {
-            startLocationUpdates();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if (mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.disconnect();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        stopLocationUpdates();
     }
 
     @Override
@@ -221,42 +129,14 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
         }
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.i(TAG, "onLocationChanged()");
-        if (location != null) {
-            if (location.hasAccuracy()) {
-                lastKnownLocation = location;
-            }
-        }
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        Log.i(TAG, "onConnected()");
-        startLocationUpdates();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.i(TAG, "onConnectionSuspended()");
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        //TODO: empty-stub method
-    }
-
     class DonateTask extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... params) {
             StringBuilder sb = new StringBuilder();
 
             try {
-                String location = lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
                 String link = "http://10.0.0.20:8000/donate";
-                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(location, "UTF-8") + "&items=" + URLEncoder.encode(finalDonate, "UTF-8") + "&description=" + URLEncoder.encode(description, "UTF-8");
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&items=" + URLEncoder.encode(finalDonate, "UTF-8") + "&description=" + URLEncoder.encode(description, "UTF-8");
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");

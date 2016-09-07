@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
+        android:textSize="20dp"
         android:id="@+id/detailtext1"
         android:layout_gravity="center_horizontal" />
 
@@ -21,6 +22,7 @@
         android:layout_height="wrap_content"
         android:text="New Text"
         android:id="@+id/detailtext2"
+        android:textSize="20dp"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/detailtext1"/>
 
@@ -28,6 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="New Text"
+        android:textSize="20dp"
         android:id="@+id/detailtext3"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/detailtext2"/>
@@ -35,7 +38,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text=""
         android:id="@+id/detailtext4"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/detailtext3"/>
@@ -43,7 +46,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
+        android:text=""
         android:id="@+id/detailtext5"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/detailtext4"/>

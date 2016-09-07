@@ -1,6 +1,5 @@
 package tech.rahulsriram.care;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -28,9 +27,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-/**
- * Created by Jebin on 24-07-2016.
- */
 public class AllNotifications extends AppCompatActivity implements GestureDetector.OnGestureListener {
     public static View.OnClickListener myOnClickListener;
 
@@ -77,82 +73,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
         swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
 
-        name0.add("name0");
-        description0.add("descritpion0");
-        item0.add("item0");
-        number0.add("number0");
-        latitude0.add("46.2276");
-        longitude0.add("2.2137");
-        name0.add("name0");
-        description0.add("descritpion0");
-        item0.add("item0");
-        number0.add("number0");
-        latitude0.add("46.2276");
-        longitude0.add("2.2137");
-        name0.add("name0");
-        description0.add("descritpion0");
-        item0.add("item0");
-        number0.add("number0");
-        latitude0.add("46.2276");
-        longitude0.add("2.2137");
-        name0.add("name0");
-        description0.add("descritpion0");
-        item0.add("item0");
-        number0.add("number0");
-        latitude0.add("46.2276");
-        longitude0.add("2.2137");
-        name0.add("name0");
-        description0.add("descritpion0");
-        item0.add("item0");
-        number0.add("number0");
-        latitude0.add("46.2276");
-        longitude0.add("2.2137");
-        name0.add("name0");
-        description0.add("descritpion0");
-        item0.add("item0");
-        number0.add("number0");
-        latitude0.add("46.2276");
-        longitude0.add("2.2137");
-
-        name1.add("name1");
-        description1.add("descritpion1");
-        item1.add("item1");
-        number1.add("number1");
-        latitude1.add("46.2276");
-        longitude1.add("2.2137");
-        name1.add("name1");
-        description1.add("descritpion1");
-        item1.add("item1");
-        number1.add("number1");
-        latitude1.add("46.2276");
-        longitude1.add("2.2137");
-        name1.add("name1");
-        description1.add("descritpion1");
-        item1.add("item1");
-        number1.add("number1");
-        latitude1.add("46.2276");
-        longitude1.add("2.2137");
-        name1.add("name1");
-        description1.add("descritpion1");
-        item1.add("item1");
-        number1.add("number1");
-        latitude1.add("46.2276");
-        longitude1.add("2.2137");
-        name1.add("name1");
-        description1.add("descritpion1");
-        item1.add("item1");
-        number1.add("number1");
-        latitude1.add("46.2276");
-        longitude1.add("2.2137");
-        name1.add("name1");
-        description1.add("descritpion1");
-        item1.add("item1");
-        number1.add("number1");
-        latitude1.add("46.2276");
-        longitude1.add("2.2137");
-
-
-
         recyclerView0 = (RecyclerView) findViewById(R.id.my_recycler_view0);
         recyclerView0.setHasFixedSize(true);
         layoutManager0 = new LinearLayoutManager(this);
@@ -165,7 +85,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         recyclerView1.setLayoutManager(layoutManager1);
         recyclerView1.setItemAnimator(new DefaultItemAnimator());
 
-        myOnClickListener = new MyOnClickListener(this);
+        myOnClickListener = new MyOnClickListener();
 
         tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
@@ -230,19 +150,11 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     }
 
     class MyOnClickListener implements View.OnClickListener {
-
-        private final Context context;
-
-        private MyOnClickListener(Context context) {
-            this.context = context;
-        }
-
         @Override
         public void onClick(View v) {
             if((tabHost.getCurrentTab()==1)) {
                 int selectedItemPosition1 = recyclerView1.getChildPosition(v);
-                RecyclerView.ViewHolder viewHolder1
-                        = recyclerView1.findViewHolderForPosition(selectedItemPosition1);
+                RecyclerView.ViewHolder viewHolder1 = recyclerView1.findViewHolderForPosition(selectedItemPosition1);
                 TextView textDescription1 = (TextView) viewHolder1.itemView.findViewById(R.id.textDescription);
                 String selectedName1 = (String) textDescription1.getText();
                 for(int i=0;i<description1.size();i++) {
@@ -320,7 +232,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
 
     class OpenDonations extends AsyncTask<String, String, String> {
-
         protected void onPreExecute() {
             number1.clear();
             name1.clear();
@@ -332,38 +243,39 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
         @Override
         protected String doInBackground(String... arg0) {
-            StringBuilder sb = new StringBuilder();
-            String link = "http://10.0.0.20:8000/recent_history",line1;
+            String link = "http://10.0.0.20:8000/recent_history", line;
             try {
-                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=+open";//TODO:number,name,latitude,longitude,item,description
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=open";//TODO:number,name,latitude,longitude,item,description
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(10);
-                conn.setReadTimeout(10);
                 conn.setRequestMethod("POST");
                 OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
                 writer.write(data);
                 writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line1 = reader.readLine()) != null) {
-                    String[] line11=line1.split(",");
-                    sb.append(data);
-                    number1.add(line11[0]);
-                    name1.add(line11[1]);
-                    latitude1.add(line11[2]);
-                    longitude1.add(line11[3]);
-                    item1.add(line11[4]);
-                    description1.add(line11[5]);
+                while ((line = reader.readLine()) != null) {
+                    if(line.equals("ok")) {
+                        String[] lineString = line.split(",");
+                        number1.add(lineString[0]);
+                        name1.add(lineString[1]);
+                        latitude1.add(lineString[2]);
+                        longitude1.add(lineString[3]);
+                        item1.add(itemNameParser(lineString[4]));
+                        description1.add(lineString[5]);
+                    } else {
+                        return line;
+                    }
                 }
                 conn.disconnect();
             } catch (Exception e) {
                 return "error";
             }
-            return sb.toString();
+
+            return "ok";
         }
 
         protected void onPostExecute(String result) {
-            if(result!="error") {
+            if(!result.equals("error")) {
                 data1 = new ArrayList<>();
                 for (int j = 0; j < name1.size(); j++) {
                     data1.add(new DataModel(number1.get(j), name1.get(j), latitude1.get(j), longitude1.get(j), item1.get(j), description1.get(j)));
@@ -374,8 +286,8 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             }
         }
     }
-    class ClosedDonations extends AsyncTask<String, String, String> {
 
+    class ClosedDonations extends AsyncTask<String, String, String> {
         protected void onPreExecute() {
             number0.clear();
             name0.clear();
@@ -390,11 +302,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             StringBuilder sb = new StringBuilder();
             String link = "http://10.0.0.20:8000/recent_history",line0;
             try {
-                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=+closed";//TODO:number,name,latitude,longitude,item,description
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=closed";//TODO:number,name,latitude,longitude,item,description
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(10);
-                conn.setReadTimeout(10);
                 conn.setRequestMethod("POST");
                 OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
                 writer.write(data);
@@ -407,7 +317,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                     name0.add(line00[1]);
                     latitude0.add(line00[2]);
                     longitude0.add(line00[3]);
-                    item0.add(line00[4]);
+                    item0.add(itemNameParser(line00[4]));
                     description0.add(line00[5]);
                 }
                 conn.disconnect();
@@ -418,7 +328,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
-            if(result!="error") {
+            if(!result.equals("error")) {
                 data0 = new ArrayList<>();
                 for (int j = 0; j < name0.size(); j++) {
                     data0.add(new DataModel(number0.get(j), name0.get(j), latitude0.get(j), longitude0.get(j), item0.get(j), description0.get(j)));
@@ -428,6 +338,38 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 recyclerView0.setAdapter(adapter0);
             }
         }
+    }
+
+    private String itemNameParser(String items) {
+        String reply = "error";
+
+        if (Integer.parseInt(items) >= 0) {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < 4; i++) {
+                switch (items.charAt(i)) {
+                    case '0':
+                        sb.append("Home Made Food, ");
+                        break;
+
+                    case '1':
+                        sb.append("Packed Food, ");
+                        break;
+
+                    case '2':
+                        sb.append("Clothes, ");
+                        break;
+
+                    case '3':
+                        sb.append("Books, ");
+                        break;
+                }
+            }
+
+            reply = sb.substring(0, sb.length() - 2);
+        }
+
+        return reply;
     }
 }
 

@@ -24,6 +24,20 @@ public class SplashActivity extends AppCompatActivity{
         setContentView(R.layout.activity_splash);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        if(sp.getInt("radius", -1) == -1) {
+            editor.putInt("radius", 10);
+        }
+
+        if(sp.getInt("update_interval", -1) == -1) {
+            editor.putInt("update_interval", 15);
+        }
+
+        if(!sp.getBoolean("volunteer", false)) {
+            editor.putBoolean("volunteer", false);
+        }
+
+        editor.apply();
         new SplashTask().execute();
     }
 
