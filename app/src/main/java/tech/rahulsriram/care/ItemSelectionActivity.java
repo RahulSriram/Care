@@ -135,7 +135,7 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
             StringBuilder sb = new StringBuilder();
 
             try {
-                String link = "http://10.0.0.20:8000/donate";
+                String link = "http://" + getString(R.string.website) + "/donate";
                 String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&items=" + URLEncoder.encode(finalDonate, "UTF-8") + "&description=" + URLEncoder.encode(description, "UTF-8");
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();

@@ -104,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
             StringBuilder sb = new StringBuilder();
 
             try {
-                String link = "http://10.0.0.20:8000/request_sms";
+                String link = "http://" + getString(R.string.website) + "/request_sms";
                 String data = "number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8");
                 URL url = new URL(link);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();

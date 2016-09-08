@@ -179,7 +179,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
     }
 
-    //TODO: Menu
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.setting, menu);
@@ -191,7 +190,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         return false;
     }
 
-    //TODO: Gesture
     public boolean onTouchEvent(MotionEvent m) {
         return gestureDetector.onTouchEvent(m);
     }
@@ -243,9 +241,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
         @Override
         protected String doInBackground(String... arg0) {
-            String link = "http://10.0.0.20:8000/recent_history", line;
+            String link = "http://" + getString(R.string.website) + "/recent_history", line;
             try {
-                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=open";//TODO:number,name,latitude,longitude,item,description
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=open";
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -300,9 +298,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
-            String link = "http://10.0.0.20:8000/recent_history",line0;
+            String link = "http://" + getString(R.string.website) + "/recent_history", line0;
             try {
-                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=closed";//TODO:number,name,latitude,longitude,item,description
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=closed";
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");

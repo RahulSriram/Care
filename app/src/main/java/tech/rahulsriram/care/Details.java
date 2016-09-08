@@ -68,7 +68,7 @@ public class Details extends AppCompatActivity {
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
-            String link = "http://10.0.0.20:8000/confirmation",line0;
+            String link = "http://" + getString(R.string.website) + "/confirmation", line0;
             try {
                 String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&donarnumber=" + URLEncoder.encode(sp.getString("tempusernumber1", ""), "UTF-8");//TODO:number,name,latitude,longitude,item,description
                 URL url = new URL(link);

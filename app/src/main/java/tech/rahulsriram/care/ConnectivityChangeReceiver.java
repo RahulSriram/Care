@@ -24,7 +24,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
-
 public class ConnectivityChangeReceiver extends BroadcastReceiver {
     private static final String TAG = "care-logger";
     public SharedPreferences sp;
@@ -78,7 +77,7 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
-            String link = "http://10.0.0.20:8000/recent_history", line1, b1;
+            String link = "http://" + context.getString(R.string.website) + "/recent_history", line1, b1;
             try {
                 String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=+open";//TODO:number,name,latitude,longitude,item,description
                 URL url = new URL(link);
