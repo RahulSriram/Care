@@ -86,4 +86,14 @@
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="20dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Accept Donation"
+        android:textSize="20dp"
+        android:id="@+id/detailsbutton"
+        android:layout_above="@+id/mapbutton"
+        android:layout_toStartOf="@+id/mapbutton"
+        android:layout_marginBottom="75dp" />
 </RelativeLayout>

@@ -11,14 +11,16 @@ public class DataModel {
     String longitude;
     String item;
     String description;
+    String itemid;
 
-    public DataModel(String number,String name,String latitude,String longitude,String version, String id_) {
+    public DataModel(String number,String name,String latitude,String longitude,String version, String id_, String fitemid) {
         this.number=number;
         this.name = name;
         this.latitude=latitude;
         this.longitude=longitude;
         this.item = version;
         this.description = id_;
+        this.itemid = fitemid;
     }
 
     public String getNumber() {
@@ -43,5 +45,9 @@ public class DataModel {
 
     public String getDescription() {
         return description;
+    }
+
+    public String getitemid() {
+        return itemid;
     }
 }
