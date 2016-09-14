@@ -90,10 +90,10 @@ public class Details extends AppCompatActivity {
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
-            if(arg0[0]=="accept") {
+            if(arg0[0].equals("accept")) {
                 String link = "http://" + getString(R.string.website) + "/accept_donation", line0;
                 try {
-                    String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&donarnumber=" + URLEncoder.encode(sp.getString("tempusernumber1", ""), "UTF-8") + "&donationId=" + URLEncoder.encode(sp.getString("tempuseritemid1", ""), "UTF-8");
+                    String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&donationId=" + URLEncoder.encode(sp.getString("tempuseritemid1", ""), "UTF-8");
                     URL url = new URL(link);
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
@@ -109,17 +109,17 @@ public class Details extends AppCompatActivity {
                     return "error";
                 }
             }
-            return arg0[0]+sb.toString();
+            return arg0[0];
         }
 
         protected void onPostExecute(String result) {
-            if((result.substring(0,3)=="path")&&(result.substring(4,result.length())=="ok")) {
+            if(result.equals("path")){//&&(result.substring(4,result.length()).equals("ok"))) {
                 Uri gmmIntentUri = Uri.parse("google.navigation:q="+la+","+lo);
                 Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                 mapIntent.setPackage("com.google.android.apps.maps");
                 startActivity(mapIntent);
             }
-            else if((result.substring(0,5)=="accept")&&(result.substring(6,result.length())=="ok")){
+            else if(result.equals("accept")){//&&(result.substring(6,result.length()).equals("ok"))){
                 Snackbar.make((findViewById(R.id.DetailsLayout)),"item Added",Snackbar.LENGTH_LONG).show();
             }
             else{

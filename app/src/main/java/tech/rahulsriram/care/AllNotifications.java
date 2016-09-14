@@ -159,28 +159,8 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         button3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editText3.getText().length()==10){
-                    progressDialog3.show();
-                    if(editText3.getText().toString()==secretnumber3){
-                        progressDialog3.dismiss();
-                        alertDialogBuilder3.setMessage("Verified");
-                        alertDialogBuilder3.show();
-                        alertDialogBuilder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                    }
-                    else{
-                        progressDialog3.dismiss();
-                        alertDialogBuilder3.setMessage("wrong pass");
-                        alertDialogBuilder3.show();
-                        alertDialogBuilder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                    }
+                if(editText3.getText().length()==6){
+                    new CloseDonations().execute(secretnumber3,editText3.getText().toString());
                 }
             }
         });
@@ -193,6 +173,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         tabSpec = tabHost.newTabSpec("newsfeed");
         tabSpec.setContent(R.id.linearLayout0);
         tabSpec.setIndicator("Completed Donations");
+//        "",getResources().getDrawable(R.drawable.books)
         tabHost.addTab(tabSpec);
 
         tabSpec = tabHost.newTabSpec("notification");
@@ -334,29 +315,30 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                     }
                 }
                 dialog3.show();
-                if(editText3.getText().length()==10){
-                    progressDialog3.show();
-                    if(editText3.getText().toString()==secretnumber3){
-                        progressDialog3.dismiss();
-                        alertDialogBuilder3.setMessage("Verified");
-                        alertDialogBuilder3.show();
-                        alertDialogBuilder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-                    }
-                    else{
-                        progressDialog3.dismiss();
-                        alertDialogBuilder3.setMessage("wrong pass");
-                        alertDialogBuilder3.show();
-                        alertDialogBuilder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
+            }
+            else if(tabHost.getCurrentTab()==2){
+                int selectedItemPosition2 = recyclerView2.getChildPosition(v);
+                RecyclerView.ViewHolder viewHolder2 = recyclerView2.findViewHolderForPosition(selectedItemPosition2);
+                TextView textDescription2 = (TextView) viewHolder2.itemView.findViewById(R.id.textDescription);
+                String selectedName2 = (String) textDescription2.getText();
+                for(int i=0;i<description2.size();i++) {
+                    if (selectedName2.equals(description2.get(i))) {
+                        la = latitude2.get(i);
+                        lo = longitude2.get(i);
+                        SharedPreferences.Editor editor=sp.edit();
+                        editor.putString("tempuserla",la);
+                        editor.putString("tempuserlo",lo);
+                        editor.putString("tempusername1",name2.get(i));
+                        editor.putString("tempuserdescription1",description2.get(i));
+                        editor.putString("tempuseritem1",item2.get(i));
+                        editor.putString("tempusernumber1",number2.get(i));
+                        editor.putString("tempuseritemid1",itemid2.get(i));
+                        editor.apply();
+                        break;
                     }
                 }
+                startActivity(new Intent(AllNotifications.this,Details.class));
+                onResume();
             }
 
         }
@@ -536,9 +518,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
         @Override
         protected String doInBackground(String... arg0) {
-            String link2 = "http://" + getString(R.string.website) + "/recent_history", line2;
+            String link2 = "http://" + getString(R.string.website) + "/list_donations", line2;
             try {
-                String data2 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=open";
+                String data2 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&type=" + URLEncoder.encode("volunteered","UTF-8");
                 URL url = new URL(link2);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -588,9 +570,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
-            String link0 = "http://" + getString(R.string.website) + "/my_donations", line0;
+            String link0 = "http://" + getString(R.string.website) + "/list_donations", line0;
             try {
-                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8");
+                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&type=" + URLEncoder.encode("donated","UTF-8");
                 URL url = new URL(link0);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -622,6 +604,57 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
                 adapter3 = new CustomAdapter(data3);
                 recyclerView3.setAdapter(adapter3);
+            }
+        }
+    }
+
+    class CloseDonations extends AsyncTask<String, String, String> {
+        protected void onPreExecute() {
+            progressDialog3.show();
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            StringBuilder sb = new StringBuilder();
+            String link0 = "http://" + getString(R.string.website) + "/close_donations", line0;
+            try {
+                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&donationId=" + URLEncoder.encode(arg0[0],"UTF-8") + "&code=" + URLEncoder.encode(arg0[1],"UTF-8");
+                URL url = new URL(link0);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                writer.write(data0);
+                writer.flush();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                while ((line0 = reader.readLine()) != null) {
+                    sb.append(line0);
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                return "error";
+            }
+            return sb.toString();
+        }
+
+        protected void onPostExecute(String result) {
+            progressDialog3.dismiss();
+            if(result.equals("ok")) {
+                alertDialogBuilder3.setMessage("Verified");
+                        alertDialogBuilder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+                alertDialogBuilder3.show();
+            }
+            else{
+                alertDialogBuilder3.setMessage("Try Again");
+                alertDialogBuilder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialogBuilder3.show();
             }
         }
     }
