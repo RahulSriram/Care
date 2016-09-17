@@ -4,7 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -29,9 +30,11 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-//        android.app.ActionBar actionBar=getActionBar();
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setIcon(R.id.);
+        android.app.ActionBar actionBar=getActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setIcon(R.drawable.home_food);
+//        actionBar.OnNavigationListener(new O)
+
 
         button=(Button)findViewById(R.id.backbutton);
         assert button != null;
@@ -80,15 +83,34 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         radius = (EditText) findViewById(R.id.radius);
-        radius.setText(String.valueOf(sp.getInt("radius", 10)));
-        radius.setOnKeyListener(new View.OnKeyListener() {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putInt("radius",10);
+        editor.apply();
+        radius.addTextChangedListener(new TextWatcher() {
             @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                SharedPreferences.Editor editor = sp.edit();
-                String input = radius.getText().toString();
-                editor.putInt("radius", !input.isEmpty()? Integer.parseInt(input) : 10);
-                editor.apply();
-                return true;
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                radius.setText(String.valueOf(sp.getInt("radius", 10)));
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(Integer.parseInt(radius.getText().toString())>10) {
+                    SharedPreferences.Editor editor = sp.edit();
+                    String input = radius.getText().toString();
+                    editor.putInt("radius",Integer.parseInt(input));
+                    editor.apply();
+                }
+                else{
+                    SharedPreferences.Editor editor = sp.edit();
+                    String input = radius.getText().toString();
+                    editor.putInt("radius", !input.isEmpty() ? Integer.parseInt(input) : 10);
+                    editor.apply();
+                }
             }
         });
     }
