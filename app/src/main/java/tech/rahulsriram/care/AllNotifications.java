@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -238,39 +239,39 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             public void onRefresh() {
                 if(tabHost.getCurrentTab()==0){
                     new ClosedDonations().execute();
-                    swipeRefreshLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    },3000);
+//                    swipeRefreshLayout.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            swipeRefreshLayout.setRefreshing(false);
+//                        }
+//                    },3000);
                 }
                 else if(tabHost.getCurrentTab()==1){
                     new OpenDonations().execute();
-                    swipeRefreshLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    },3000);
+//                    swipeRefreshLayout.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            swipeRefreshLayout.setRefreshing(false);
+//                        }
+//                    },3000);
                 }
                 else if(tabHost.getCurrentTab()==2){
                     new AcceptedDonations().execute();
-                    swipeRefreshLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    },3000);
+//                    swipeRefreshLayout.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            swipeRefreshLayout.setRefreshing(false);
+//                        }
+//                    },3000);
                 }
                 else{
                     new MyDonations().execute();
-                    swipeRefreshLayout.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            swipeRefreshLayout.setRefreshing(false);
-                        }
-                    },3000);
+//                    swipeRefreshLayout.postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            swipeRefreshLayout.setRefreshing(false);
+//                        }
+//                    },3000);
                 }
             }
         });
@@ -410,7 +411,11 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             StringBuilder sb = new StringBuilder();
             String link0 = "http://" + getString(R.string.website) + "/recent_history", line0;
             try {
-                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(String.valueOf(sp.getInt("radius", 10)), "UTF-8") + "&status=" + URLEncoder.encode("closed", "UTF-8");
+                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
+                        + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
+                        + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8")
+                        + "&radius=" + URLEncoder.encode(String.valueOf(sp.getInt("radius", 10)), "UTF-8")
+                        + "&status=" + URLEncoder.encode("closed", "UTF-8");
                 URL url = new URL(link0);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -421,23 +426,28 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 while ((line0 = reader.readLine()) != null) {
                     String[] line00=line0.split(",");
                     sb.append(line0);
-                    number0.add(line00[0]);
-                    name0.add(line00[1]);
-                    latitude0.add(line00[2]);
-                    longitude0.add(line00[3]);
-                    item0.add(itemNameParser(line00[4]));
-                    description0.add(line00[5]);
-                    itemid0.add(line00[6]);
+                    if(!line0.equals("ok")) {
+                        number0.add(line00[0]);
+                        name0.add(line00[1]);
+                        latitude0.add(line00[2]);
+                        longitude0.add(line00[3]);
+                        item0.add("itemNameParser(line00[4])");
+                        description0.add(line00[5]);
+                        itemid0.add(line00[6]);
+                    }else{
+                        return "ok";
+                    }
                 }
                 conn.disconnect();
             } catch (Exception e) {
                 return "error";
             }
-            return sb.toString();
+            return "ok";
         }
 
         protected void onPostExecute(String result) {
-            if(!result.equals("error")) {
+            swipeRefreshLayout.setRefreshing(false);
+            if(result.equals("ok")) {
                 data0 = new ArrayList<>();
                 for (int j = 0; j < name0.size(); j++) {
                     data0.add(new DataModel(number0.get(j), name0.get(j), latitude0.get(j), longitude0.get(j), item0.get(j), description0.get(j), itemid0.get(j)));
@@ -457,13 +467,18 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             longitude1.clear();
             item1.clear();
             description1.clear();
+            itemid1.clear();
         }
 
         @Override
         protected String doInBackground(String... arg0) {
             String link1 = "http://" + getString(R.string.website) + "/recent_history", line1;
             try {
-                String data1 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(String.valueOf(sp.getInt("radius", 10)), "UTF-8") + "&status="+ URLEncoder.encode("open", "UTF-8");
+                String data1 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
+                        + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
+                        + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8")
+                        + "&radius=" + URLEncoder.encode(String.valueOf(sp.getInt("radius", 10)), "UTF-8")
+                        + "&status="+ URLEncoder.encode("open", "UTF-8");
                 URL url = new URL(link1);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -472,17 +487,17 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line1 = reader.readLine()) != null) {
-                    if(line1.equals("ok")) {
+                    if(!line1.equals("ok")) {
                         String[] lineString = line1.split(",");
                         number1.add(lineString[0]);
                         name1.add(lineString[1]);
                         latitude1.add(lineString[2]);
                         longitude1.add(lineString[3]);
-                        item1.add(itemNameParser(lineString[4]));
+                        item1.add("itemNameParser(lineString[4])");//problem here
                         description1.add(lineString[5]);
                         itemid1.add(lineString[6]);
                     } else {
-                        return line1;
+                        return "ok";
                     }
                 }
                 conn.disconnect();
@@ -494,7 +509,8 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
-            if(!result.equals("error")) {
+            swipeRefreshLayout.setRefreshing(false);
+            if(result.equals("ok")) {
                 data1 = new ArrayList<>();
                 for (int j = 0; j < name1.size(); j++) {
                     data1.add(new DataModel(number1.get(j), name1.get(j), latitude1.get(j), longitude1.get(j), item1.get(j), description1.get(j), itemid1.get(j)));
@@ -514,13 +530,16 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             longitude2.clear();
             item2.clear();
             description2.clear();
+            itemid2.clear();
         }
 
         @Override
         protected String doInBackground(String... arg0) {
             String link2 = "http://" + getString(R.string.website) + "/list_donations", line2;
             try {
-                String data2 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&type=" + URLEncoder.encode("volunteered","UTF-8");
+                String data2 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
+                        + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
+                        + "&type=" + URLEncoder.encode("volunteered","UTF-8");
                 URL url = new URL(link2);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -529,17 +548,17 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 while ((line2 = reader.readLine()) != null) {
-                    if(line2.equals("ok")) {
+                    if(!line2.equals("ok")) {
                         String[] lineString = line2.split(",");
                         number2.add(lineString[0]);
                         name2.add(lineString[1]);
                         latitude2.add(lineString[2]);
                         longitude2.add(lineString[3]);
-                        item2.add(itemNameParser(lineString[4]));
+                        item2.add("itemNameParser(lineString[4])");
                         description2.add(lineString[5]);
                         itemid2.add(lineString[6]);
                     } else {
-                        return line2;
+                        return "ok";
                     }
                 }
                 conn.disconnect();
@@ -551,7 +570,8 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
-            if(!result.equals("error")) {
+            swipeRefreshLayout.setRefreshing(false);
+            if(result.equals("ok")) {
                 data2 = new ArrayList<>();
                 for (int j = 0; j < name2.size(); j++) {
                     data2.add(new DataModel(number2.get(j), name2.get(j), latitude2.get(j), longitude2.get(j), item2.get(j), description2.get(j), itemid2.get(j)));
@@ -572,7 +592,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             StringBuilder sb = new StringBuilder();
             String link0 = "http://" + getString(R.string.website) + "/list_donations", line0;
             try {
-                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&type=" + URLEncoder.encode("donated","UTF-8");
+                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
+                        + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
+                        + "&type=" + URLEncoder.encode("donated","UTF-8");
                 URL url = new URL(link0);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -583,20 +605,25 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 while ((line0 = reader.readLine()) != null) {
                     String[] line00=line0.split(",");
                     sb.append(line0);
-                    name3.add(line00[1]);
-                    item3.add(itemNameParser(line00[4]));
-                    description3.add(line00[5]);
-                    itemid3.add(line00[6]);
+                    if(!line0.equals("ok")) {
+                        name3.add(line00[1]);
+                        item3.add("itemNameParser(line00[4])");
+                        description3.add(line00[5]);
+                        itemid3.add(line00[6]);
+                    }else{
+                        return "ok";
+                    }
                 }
                 conn.disconnect();
             } catch (Exception e) {
                 return "error";
             }
-            return sb.toString();
+            return "ok";
         }
 
         protected void onPostExecute(String result) {
-            if(!result.equals("error")) {
+            swipeRefreshLayout.setRefreshing(false);
+            if(result.equals("ok")) {
                 data3 = new ArrayList<>();
                 for (int j = 0; j < name3.size(); j++) {
                     data3.add(new DataModel("", name3.get(j), "", "", item3.get(j), description3.get(j), itemid3.get(j)));
@@ -618,7 +645,10 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             StringBuilder sb = new StringBuilder();
             String link0 = "http://" + getString(R.string.website) + "/close_donations", line0;
             try {
-                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&donationId=" + URLEncoder.encode(arg0[0],"UTF-8") + "&code=" + URLEncoder.encode(arg0[1],"UTF-8");
+                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
+                        + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
+                        + "&donationId=" + URLEncoder.encode(arg0[0],"UTF-8")
+                        + "&code=" + URLEncoder.encode(arg0[1],"UTF-8");
                 URL url = new URL(link0);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
@@ -637,6 +667,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
 
         protected void onPostExecute(String result) {
+            swipeRefreshLayout.setRefreshing(false);
             progressDialog3.dismiss();
             if(result.equals("ok")) {
                 alertDialogBuilder3.setMessage("Verified");
@@ -659,7 +690,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         }
     }
 
-    private String itemNameParser(String items) {
+    public String itemNameParser(String items) {
         String reply = "error";
 
         if (Integer.parseInt(items) >= 0) {
@@ -682,13 +713,16 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                     case '3':
                         sb.append("Books, ");
                         break;
+                    default:
+                        sb.append("unknown");
+                        break;
                 }
             }
 
             reply = sb.substring(0, sb.length() - 2);
         }
-
-        return reply;
+        Log.i("jebin",reply);
+        return reply.toString();
     }
 }
 

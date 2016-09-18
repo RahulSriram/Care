@@ -42,8 +42,10 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
             NetworkInfo[] info = cm.getAllNetworkInfo();
             for (int i = 0; i < info.length; i++) {
                 if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+                    context.startService(intent);
                     new isDonationsAvailable(context).execute();
                     Log.i(TAG,"call async");
+                    break;
                 } else if (isMyServiceRunning(CareService.class, context, intent)) {
                     context.stopService(intent);
                     Log.i(TAG,"closeservice");
@@ -79,11 +81,9 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
             StringBuilder sb = new StringBuilder();
             String link = "http://" + context.getString(R.string.website) + "/recent_history", line1, b1;
             try {
-                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(sp.getString("radius", ""), "UTF-8") + "&status=+open";//TODO:number,name,latitude,longitude,item,description
+                String data = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8") + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8") + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8") + "&radius=" + URLEncoder.encode(String.valueOf(sp.getInt("radius", 10)), "UTF-8") + "&status=" + URLEncoder.encode("open", "UTF-8");
                 URL url = new URL(link);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setConnectTimeout(10);
-                conn.setReadTimeout(10);
                 conn.setRequestMethod("POST");
                 OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
                 writer.write(data);
