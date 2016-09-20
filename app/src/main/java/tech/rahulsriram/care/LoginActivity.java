@@ -126,10 +126,9 @@ public class LoginActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             if (result.equals("ok")) {
-                startActivity(new Intent(LoginActivity.this, AllNotifications.class));
+                startActivity(new Intent(LoginActivity.this, SmsVerificationActivity.class));
                 finish();
             } else {
-                startActivity(new Intent(LoginActivity.this, AllNotifications.class));
                 Snackbar.make(findViewById(R.id.LoginLayout), "Please try again", Snackbar.LENGTH_LONG).show();
             }
 

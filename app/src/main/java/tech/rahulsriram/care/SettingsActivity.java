@@ -32,11 +32,6 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-//        android.app.ActionBar actionBar=getActionBar();
-//        actionBar.setDisplayHomeAsUpEnabled(true);
-//        actionBar.setIcon(R.drawable.home_food);
-//        actionBar.OnNavigationListener(new );
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
 
