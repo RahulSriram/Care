@@ -12,5 +12,5 @@
     <string name="enter_item_description">Enter Item Description</string>
     <string name="enter_name">Enter Name</string>
     <string name="finish">Finish</string>
-    <string name="website">10.0.0.20:8000</string>
+    <string name="website">192.168.1.104:8000</string>
 </resources>

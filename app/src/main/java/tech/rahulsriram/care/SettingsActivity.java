@@ -6,10 +6,13 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -23,28 +26,19 @@ public class SettingsActivity extends AppCompatActivity {
     Switch volunteerSwitch;
     Spinner updateIntervalSpinner;
     EditText radius;
-    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        android.app.ActionBar actionBar=getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setIcon(R.drawable.home_food);
-//        actionBar.OnNavigationListener(new O)
+//        android.app.ActionBar actionBar=getActionBar();
+//        actionBar.setDisplayHomeAsUpEnabled(true);
+//        actionBar.setIcon(R.drawable.home_food);
+//        actionBar.OnNavigationListener(new );
 
-
-        button=(Button)findViewById(R.id.backbutton);
-        assert button != null;
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingsActivity.this,AllNotifications.class));
-                finish();
-            }
-        });
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
@@ -89,30 +83,41 @@ public class SettingsActivity extends AppCompatActivity {
         radius.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                radius.setText(String.valueOf(sp.getInt("radius", 10)));
+                radius = (EditText) findViewById(R.id.radius);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putInt("radius", 10);
+                editor.apply();
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                if(radius.getText().toString().length()>=2) {
+                    Log.i("edittext",s.toString());
+                    radius = (EditText) findViewById(R.id.radius);
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putInt("radius", Integer.parseInt(radius.getText().toString()));
+                    editor.apply();
+                }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(Integer.parseInt(radius.getText().toString())>10) {
-                    SharedPreferences.Editor editor = sp.edit();
-                    String input = radius.getText().toString();
-                    editor.putInt("radius",Integer.parseInt(input));
-                    editor.apply();
-                }
-                else{
-                    SharedPreferences.Editor editor = sp.edit();
-                    String input = radius.getText().toString();
-                    editor.putInt("radius", !input.isEmpty() ? Integer.parseInt(input) : 10);
-                    editor.apply();
-                }
+
             }
         });
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.onsetting, menu);
+        return true;
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                startActivity(new Intent(SettingsActivity.this,AllNotifications.class));
+                finish();
+                break;
+        }
+        return false;
     }
 
 }

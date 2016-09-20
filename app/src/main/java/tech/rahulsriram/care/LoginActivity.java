@@ -15,16 +15,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -131,9 +126,10 @@ public class LoginActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             if (result.equals("ok")) {
-                startActivity(new Intent(LoginActivity.this, SmsVerificationActivity.class));
+                startActivity(new Intent(LoginActivity.this, AllNotifications.class));
                 finish();
             } else {
+                startActivity(new Intent(LoginActivity.this, AllNotifications.class));
                 Snackbar.make(findViewById(R.id.LoginLayout), "Please try again", Snackbar.LENGTH_LONG).show();
             }
 

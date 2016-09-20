@@ -474,9 +474,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         protected String doInBackground(String... arg0) {
             String link1 = "http://" + getString(R.string.website) + "/recent_history", line1;
             try {
-                String data1 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
-                        + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
-                        + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8")
+                String data1 = "id=d5af4fcbb3b28d54" /*+ URLEncoder.encode(sp.getString("id", ""), "UTF-8")*/
+                        + "&number=9952542626" /*+ URLEncoder.encode(sp.getString("number", ""), "UTF-8")*/
+                        + "&location=13.46879005,15.45670033" /*+ URLEncoder.encode(sp.getString("location", ""), "UTF-8")*/
                         + "&radius=" + URLEncoder.encode(String.valueOf(sp.getInt("radius", 10)), "UTF-8")
                         + "&status="+ URLEncoder.encode("open", "UTF-8");
                 URL url = new URL(link1);
@@ -493,7 +493,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                         name1.add(lineString[1]);
                         latitude1.add(lineString[2]);
                         longitude1.add(lineString[3]);
-                        item1.add("itemNameParser(lineString[4])");//problem here
+                        item1.add(itemNameParser(lineString[4]));//problem here
                         description1.add(lineString[5]);
                         itemid1.add(lineString[6]);
                     } else {
@@ -606,10 +606,10 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                     String[] line00=line0.split(",");
                     sb.append(line0);
                     if(!line0.equals("ok")) {
-                        name3.add(line00[1]);
-                        item3.add("itemNameParser(line00[4])");
-                        description3.add(line00[5]);
-                        itemid3.add(line00[6]);
+                        name3.add(line00[0]);
+                        item3.add(itemNameParser(line00[1]));
+                        description3.add(line00[2]);
+                        itemid3.add(line00[3]);
                     }else{
                         return "ok";
                     }
@@ -691,12 +691,13 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     }
 
     public String itemNameParser(String items) {
+        Log.i("jebin","itemname1"+items);
         String reply = "error";
 
         if (Integer.parseInt(items) >= 0) {
             StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i <items.length(); i++) {
                 switch (items.charAt(i)) {
                     case '0':
                         sb.append("Home Made Food, ");
