@@ -64,7 +64,7 @@
         </receiver>
 
         <activity
-            android:name=".SettingsActivity"
+            android:name=".Settings"
             android:label="@string/app_name" />
 
         <activity android:name=".SmsVerificationActivity"

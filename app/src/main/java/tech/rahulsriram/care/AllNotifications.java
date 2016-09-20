@@ -8,13 +8,13 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -239,39 +239,15 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             public void onRefresh() {
                 if(tabHost.getCurrentTab()==0){
                     new ClosedDonations().execute();
-//                    swipeRefreshLayout.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            swipeRefreshLayout.setRefreshing(false);
-//                        }
-//                    },3000);
                 }
                 else if(tabHost.getCurrentTab()==1){
                     new OpenDonations().execute();
-//                    swipeRefreshLayout.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            swipeRefreshLayout.setRefreshing(false);
-//                        }
-//                    },3000);
                 }
                 else if(tabHost.getCurrentTab()==2){
                     new AcceptedDonations().execute();
-//                    swipeRefreshLayout.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            swipeRefreshLayout.setRefreshing(false);
-//                        }
-//                    },3000);
                 }
                 else{
                     new MyDonations().execute();
-//                    swipeRefreshLayout.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            swipeRefreshLayout.setRefreshing(false);
-//                        }
-//                    },3000);
                 }
             }
         });
@@ -352,7 +328,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        startActivity(new Intent(AllNotifications.this, SettingsActivity.class));
+        startActivity(new Intent(AllNotifications.this, Settings.class));
         return false;
     }
 
@@ -378,8 +354,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-//        Toast.makeText(this,String.valueOf(distanceX),Toast.LENGTH_LONG).show();
-
 
         return false;
     }
@@ -431,7 +405,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                         name0.add(line00[1]);
                         latitude0.add(line00[2]);
                         longitude0.add(line00[3]);
-                        item0.add("itemNameParser(line00[4])");
+                        item0.add(itemNameParser(line00[4]));
                         description0.add(line00[5]);
                         itemid0.add(line00[6]);
                     }else{
@@ -456,6 +430,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 adapter0 = new CustomAdapter(data0);
                 recyclerView0.setAdapter(adapter0);
             }
+            else{
+                Snackbar.make(findViewById(R.id.TabView),"Please try again",Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -474,9 +451,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         protected String doInBackground(String... arg0) {
             String link1 = "http://" + getString(R.string.website) + "/recent_history", line1;
             try {
-                String data1 = "id=d5af4fcbb3b28d54" /*+ URLEncoder.encode(sp.getString("id", ""), "UTF-8")*/
-                        + "&number=9952542626" /*+ URLEncoder.encode(sp.getString("number", ""), "UTF-8")*/
-                        + "&location=13.46879005,15.45670033" /*+ URLEncoder.encode(sp.getString("location", ""), "UTF-8")*/
+                String data1 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
+                        + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
+                        + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8")
                         + "&radius=" + URLEncoder.encode(String.valueOf(sp.getInt("radius", 10)), "UTF-8")
                         + "&status="+ URLEncoder.encode("open", "UTF-8");
                 URL url = new URL(link1);
@@ -519,6 +496,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 adapter1 = new CustomAdapter(data1);
                 recyclerView1.setAdapter(adapter1);
             }
+            else{
+                Snackbar.make(findViewById(R.id.TabView),"Please try again",Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 
@@ -554,7 +534,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                         name2.add(lineString[1]);
                         latitude2.add(lineString[2]);
                         longitude2.add(lineString[3]);
-                        item2.add("itemNameParser(lineString[4])");
+                        item2.add(itemNameParser(lineString[4]));
                         description2.add(lineString[5]);
                         itemid2.add(lineString[6]);
                     } else {
@@ -579,6 +559,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
                 adapter2 = new CustomAdapter(data2);
                 recyclerView2.setAdapter(adapter2);
+            }
+            else{
+                Snackbar.make(findViewById(R.id.TabView),"Please try again",Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -631,6 +614,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
                 adapter3 = new CustomAdapter(data3);
                 recyclerView3.setAdapter(adapter3);
+            }
+            else{
+                Snackbar.make(findViewById(R.id.TabView),"Please try again",Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -691,7 +677,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     }
 
     public String itemNameParser(String items) {
-        Log.i("jebin","itemname1"+items);
         String reply = "error";
 
         if (Integer.parseInt(items) >= 0) {
@@ -722,7 +707,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
             reply = sb.substring(0, sb.length() - 2);
         }
-        Log.i("jebin",reply);
         return reply.toString();
     }
 }
