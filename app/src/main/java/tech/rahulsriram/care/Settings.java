@@ -114,7 +114,8 @@ public class Settings extends AppCompatActivity {
         return false;
     }
     public void onBackPressed(){
-        this.finish();
+        startActivity(new Intent(Settings.this,AllNotifications.class));
+        finish();
         super.onBackPressed();
     }
 }

@@ -43,7 +43,11 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
             for (int i = 0; i < info.length; i++) {
                 if (info[i].getState() == NetworkInfo.State.CONNECTED) {
                     context.startService(intent);
-                    new isDonationsAvailable(context).execute();
+                    if(sp.getBoolean("volunteer",false)) {
+                        new isDonationsAvailable(context).execute();
+                    }
+                    else{
+                    }
                     Log.i(TAG,"call async");
                     break;
                 } else if (isMyServiceRunning(CareService.class, context, intent)) {
@@ -89,7 +93,7 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
                 writer.write(data);
                 writer.flush();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                if ((line1 = reader.readLine()) != null) {
+                if (((line1 = reader.readLine()) != null)&&(!line1.equals("ok"))) {
                     b1 = "yes";
                 } else {
                     b1 = "no";
@@ -113,20 +117,23 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context.getApplicationContext());
                 mBuilder.setSmallIcon(R.drawable.notification_icon);
                 mBuilder.setContentTitle("Notification");
-                //if (!("nil".equals(a = checkconnectivity(context)))) {
-                if (isMyServiceRunning(CareService.class, context, intent)) {
-                    mBuilder.setContentText(a + " Donations Available");
-                    mBuilder.setContentIntent(pi);
-                    mNotificationManager.notify(324255, mBuilder.build());
-                    //TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-                    //taskStackBuilder.addParentStack(AllNotifications.class);
-                    //taskStackBuilder.addNextIntent(intentI);
-                } else {
-                    context.startService(intent);
-                    mBuilder.setContentText(a + " Donations Available");
-                    mBuilder.setContentIntent(pi);
-                    mNotificationManager.notify(324255, mBuilder.build());
-                    //TaskStackBuilder taskStackBuilder=TaskStackBuilder.create(context);
+                if (!sp.getBoolean("AllNotifications",false)) {
+                    Log.i("jebin","fdgkjfkgj");
+                    //if (!("nil".equals(a = checkconnectivity(context)))) {
+                    if (isMyServiceRunning(CareService.class, context, intent)) {
+                        mBuilder.setContentText("Donations Available");
+                        mBuilder.setContentIntent(pi);
+                        mNotificationManager.notify(324255, mBuilder.build());
+                        //TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
+                        //taskStackBuilder.addParentStack(AllNotifications.class);
+                        //taskStackBuilder.addNextIntent(intentI);
+                    } else {
+                        context.startService(intent);
+                        mBuilder.setContentText("Donations Available");
+                        mBuilder.setContentIntent(pi);
+                        mNotificationManager.notify(324255, mBuilder.build());
+                        //TaskStackBuilder taskStackBuilder=TaskStackBuilder.create(context);
+                    }
                 }
             }
         }

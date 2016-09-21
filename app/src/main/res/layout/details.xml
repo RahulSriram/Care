@@ -96,4 +96,23 @@
         android:layout_above="@+id/mapbutton"
         android:layout_toStartOf="@+id/mapbutton"
         android:layout_marginBottom="75dp" />
+
+    <Button
+        android:text="Make Call"
+        android:textSize="20dp"
+        android:id="@+id/callbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="17dp"
+        android:layout_above="@+id/verifybutton"
+        android:layout_toEndOf="@+id/detailtext3" />
+
+    <Button
+        android:text="Verify"
+        android:textSize="20dp"
+        android:id="@+id/verifybutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/detailsbutton"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

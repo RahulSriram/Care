@@ -1,6 +1,8 @@
 package tech.rahulsriram.care;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,13 +37,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class AllNotifications extends AppCompatActivity implements GestureDetector.OnGestureListener {
+public class AllNotifications extends AppCompatActivity implements GestureDetector.OnGestureListener, View.OnClickListener {
     public static View.OnClickListener myOnClickListener;
-
-    static RecyclerView.Adapter adapter0;
-    RecyclerView.LayoutManager layoutManager0;
-    static RecyclerView recyclerView0;
-    static ArrayList<DataModel> data0;
 
     static RecyclerView.Adapter adapter1;
     RecyclerView.LayoutManager layoutManager1;
@@ -56,14 +54,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     RecyclerView.LayoutManager layoutManager3;
     static RecyclerView recyclerView3;
     static ArrayList<DataModel> data3;
-
-    ArrayList<String> name0 = new ArrayList<>();
-    ArrayList<String> description0 = new ArrayList<>();
-    ArrayList<String> item0 = new ArrayList<>();
-    ArrayList<String> number0 = new ArrayList<>();
-    ArrayList<String> latitude0 = new ArrayList<>();
-    ArrayList<String> longitude0 = new ArrayList<>();
-    ArrayList<String> itemid0 = new ArrayList<>();
 
 
     ArrayList<String> name1 = new ArrayList<>();
@@ -86,6 +76,8 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     ArrayList<String> description3 = new ArrayList<>();
     ArrayList<String> item3 = new ArrayList<>();
     ArrayList<String> number3 = new ArrayList<>();
+    ArrayList<String> latitude3 = new ArrayList<>();
+    ArrayList<String> longitude3 = new ArrayList<>();
     ArrayList<String> itemid3 = new ArrayList<>();
 
     TabHost tabHost;
@@ -109,21 +101,27 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
     Button button3;
 
+    NotificationManager mNotificationManager;
+
+    public static Activity allNotifications;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabview);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
+        allNotifications=this;
+        SharedPreferences.Editor edit=sp.edit();
+        edit.putBoolean("AllNotifications",true);
+        edit.apply();
+
+        mNotificationManager = (NotificationManager) this.getApplicationContext().getSystemService(this.NOTIFICATION_SERVICE);
+        mNotificationManager.cancel(324255);
+
         gestureDetector = new GestureDetector(this);
 
         swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
-
-        recyclerView0 = (RecyclerView) findViewById(R.id.my_recycler_view0);
-        recyclerView0.setHasFixedSize(true);
-        layoutManager0 = new LinearLayoutManager(this);
-        recyclerView0.setLayoutManager(layoutManager0);
-        recyclerView0.setItemAnimator(new DefaultItemAnimator());
 
         recyclerView1 = (RecyclerView) findViewById(R.id.my_recycler_view1);
         recyclerView1.setHasFixedSize(true);
@@ -157,36 +155,22 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
         alertDialogBuilder3 = new AlertDialog.Builder(this);
 
-        button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(editText3.getText().length()==6){
-                    new CloseDonations().execute(secretnumber3,editText3.getText().toString());
-                }
-            }
-        });
-
         tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
 
         TabHost.TabSpec tabSpec;
 
-        tabSpec = tabHost.newTabSpec("newsfeed");
-        tabSpec.setContent(R.id.linearLayout0);
-        tabSpec.setIndicator("Completed Donations");
-//        "",getResources().getDrawable(R.drawable.books)
-        tabHost.addTab(tabSpec);
+        if(sp.getBoolean("volunteer",false)) {
+            tabSpec = tabHost.newTabSpec("notification");
+            tabSpec.setContent(R.id.linearLayout1);
+            tabSpec.setIndicator("Open Donations");
+            tabHost.addTab(tabSpec);
 
-        tabSpec = tabHost.newTabSpec("notification");
-        tabSpec.setContent(R.id.linearLayout1);
-        tabSpec.setIndicator("Open Donations");
-        tabHost.addTab(tabSpec);
-
-        tabSpec = tabHost.newTabSpec("accepteddonations");
-        tabSpec.setContent(R.id.linearLayout2);
-        tabSpec.setIndicator("Accepted Donations");
-        tabHost.addTab(tabSpec);
-
+            tabSpec = tabHost.newTabSpec("accepteddonations");
+            tabSpec.setContent(R.id.linearLayout2);
+            tabSpec.setIndicator("Accepted Donations");
+            tabHost.addTab(tabSpec);
+        }
         tabSpec = tabHost.newTabSpec("mydonations");
         tabSpec.setContent(R.id.linearLayout3);
         tabSpec.setIndicator("My Donations");
@@ -198,55 +182,34 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 getResources().getColor(R.color.colorPrimaryDark),
                 getResources().getColor(R.color.colorAccent));
 
-        FloatingActionButton donate0 = (FloatingActionButton) findViewById(R.id.donateButton0);
-        assert donate0 != null;
-        donate0.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AllNotifications.this, ItemSelectionActivity.class));
-            }
-        });
+        button3.setOnClickListener(this);
 
         FloatingActionButton donate1 = (FloatingActionButton) findViewById(R.id.donateButton1);
         assert donate1 != null;
-        donate1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AllNotifications.this, ItemSelectionActivity.class));
-            }
-        });
+        donate1.setOnClickListener(this);
 
         FloatingActionButton donate2 = (FloatingActionButton) findViewById(R.id.donateButton2);
         assert donate2 != null;
-        donate2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AllNotifications.this, ItemSelectionActivity.class));
-            }
-        });
+        donate2.setOnClickListener(this);
 
         FloatingActionButton donate3 = (FloatingActionButton) findViewById(R.id.donateButton3);
         assert donate3 != null;
-        donate3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AllNotifications.this, ItemSelectionActivity.class));
-            }
-        });
+        donate3.setOnClickListener(this);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if(tabHost.getCurrentTab()==0){
-                    new ClosedDonations().execute();
-                }
-                else if(tabHost.getCurrentTab()==1){
+                mNotificationManager.cancel(324255);
+                if(tabHost.getCurrentTabTag().equals("notification")){
+                    Log.i("jebin",tabHost.getCurrentTabTag());
                     new OpenDonations().execute();
                 }
-                else if(tabHost.getCurrentTab()==2){
+                else if(tabHost.getCurrentTabTag().equals("accepteddonations")){
+                    Log.i("jebin",tabHost.getCurrentTabTag());
                     new AcceptedDonations().execute();
                 }
-                else{
+                else if(tabHost.getCurrentTabTag().equals("mydonations")){
+                    Log.i("jebin",tabHost.getCurrentTabTag());
                     new MyDonations().execute();
                 }
             }
@@ -256,7 +219,33 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     class MyOnClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-            if((tabHost.getCurrentTab()==1)) {
+            if(tabHost.getCurrentTabTag().equals("accepteddonations")){
+                int selectedItemPosition2 = recyclerView2.getChildPosition(v);
+                RecyclerView.ViewHolder viewHolder2 = recyclerView2.findViewHolderForPosition(selectedItemPosition2);
+                TextView textDescription2 = (TextView) viewHolder2.itemView.findViewById(R.id.textDescription);
+                String selectedName2 = (String) textDescription2.getText();
+                for(int i=0;i<description2.size();i++) {
+                    if (selectedName2.equals(description2.get(i))) {
+                        secretnumber3=itemid2.get(i);
+                        la = latitude2.get(i);
+                        lo = longitude2.get(i);
+                        SharedPreferences.Editor editor=sp.edit();
+                        editor.putString("tempuserla",la);
+                        editor.putString("tempuserlo",lo);
+                        editor.putString("tempusername1",name2.get(i));
+                        editor.putString("tempuserdescription1",description2.get(i));
+                        editor.putString("tempuseritem1",item2.get(i));
+                        editor.putString("tempusernumber1",number2.get(i));
+                        editor.putString("tempuseritemid1",itemid2.get(i));
+                        editor.apply();
+                        break;
+                    }
+                }
+                startActivity(new Intent(AllNotifications.this,Details.class));
+                finish();
+//                dialog3.show();
+            }
+            else if(tabHost.getCurrentTabTag().equals("notification")){
                 int selectedItemPosition1 = recyclerView1.getChildPosition(v);
                 RecyclerView.ViewHolder viewHolder1 = recyclerView1.findViewHolderForPosition(selectedItemPosition1);
                 TextView textDescription1 = (TextView) viewHolder1.itemView.findViewById(R.id.textDescription);
@@ -278,46 +267,32 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                     }
                 }
                 startActivity(new Intent(AllNotifications.this,Details.class));
-                onResume();
+                finish();
             }
-            else if(tabHost.getCurrentTab()==3){
+            else if(tabHost.getCurrentTabTag().equals("mydonations")){
                 int selectedItemPosition3 = recyclerView3.getChildPosition(v);
                 RecyclerView.ViewHolder viewHolder3 = recyclerView3.findViewHolderForPosition(selectedItemPosition3);
                 TextView textDescription3 = (TextView) viewHolder3.itemView.findViewById(R.id.textDescription);
                 String selectedName3 = (String) textDescription3.getText();
                 for(int i=0;i<description3.size();i++) {
                     if (selectedName3.equals(description3.get(i))) {
-                        secretnumber3=itemid3.get(i);
-                        break;
-                    }
-                }
-                dialog3.show();
-            }
-            else if(tabHost.getCurrentTab()==2){
-                int selectedItemPosition2 = recyclerView2.getChildPosition(v);
-                RecyclerView.ViewHolder viewHolder2 = recyclerView2.findViewHolderForPosition(selectedItemPosition2);
-                TextView textDescription2 = (TextView) viewHolder2.itemView.findViewById(R.id.textDescription);
-                String selectedName2 = (String) textDescription2.getText();
-                for(int i=0;i<description2.size();i++) {
-                    if (selectedName2.equals(description2.get(i))) {
-                        la = latitude2.get(i);
-                        lo = longitude2.get(i);
+//                        la = latitude3.get(i);
+//                        lo = longitude3.get(i);
                         SharedPreferences.Editor editor=sp.edit();
-                        editor.putString("tempuserla",la);
-                        editor.putString("tempuserlo",lo);
-                        editor.putString("tempusername1",name2.get(i));
-                        editor.putString("tempuserdescription1",description2.get(i));
-                        editor.putString("tempuseritem1",item2.get(i));
-                        editor.putString("tempusernumber1",number2.get(i));
-                        editor.putString("tempuseritemid1",itemid2.get(i));
+                        editor.putString("tempuserla","");
+                        editor.putString("tempuserlo","");
+                        editor.putString("tempusername1",name3.get(i));
+                        editor.putString("tempuserdescription1",description3.get(i));
+                        editor.putString("tempuseritem1",item3.get(i));
+                        editor.putString("tempusernumber1",sp.getString("number",""));
+                        editor.putString("tempuseritemid1",itemid3.get(i));
                         editor.apply();
                         break;
                     }
                 }
                 startActivity(new Intent(AllNotifications.this,Details.class));
-                onResume();
+                finish();
             }
-
         }
     }
 
@@ -329,6 +304,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
     public boolean onOptionsItemSelected(MenuItem item) {
         startActivity(new Intent(AllNotifications.this, Settings.class));
+        finish();
         return false;
     }
 
@@ -366,74 +342,6 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
         return false;
-    }
-
-
-    class ClosedDonations extends AsyncTask<String, String, String> {
-        protected void onPreExecute() {
-            number0.clear();
-            name0.clear();
-            latitude0.clear();
-            longitude0.clear();
-            item0.clear();
-            description0.clear();
-            itemid0.clear();
-        }
-
-        @Override
-        protected String doInBackground(String... arg0) {
-            StringBuilder sb = new StringBuilder();
-            String link0 = "http://" + getString(R.string.website) + "/recent_history", line0;
-            try {
-                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
-                        + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
-                        + "&location=" + URLEncoder.encode(sp.getString("location", ""), "UTF-8")
-                        + "&radius=" + URLEncoder.encode(String.valueOf(sp.getInt("radius", 10)), "UTF-8")
-                        + "&status=" + URLEncoder.encode("closed", "UTF-8");
-                URL url = new URL(link0);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-                writer.write(data0);
-                writer.flush();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                while ((line0 = reader.readLine()) != null) {
-                    String[] line00=line0.split(",");
-                    sb.append(line0);
-                    if(!line0.equals("ok")) {
-                        number0.add(line00[0]);
-                        name0.add(line00[1]);
-                        latitude0.add(line00[2]);
-                        longitude0.add(line00[3]);
-                        item0.add(itemNameParser(line00[4]));
-                        description0.add(line00[5]);
-                        itemid0.add(line00[6]);
-                    }else{
-                        return "ok";
-                    }
-                }
-                conn.disconnect();
-            } catch (Exception e) {
-                return "error";
-            }
-            return "ok";
-        }
-
-        protected void onPostExecute(String result) {
-            swipeRefreshLayout.setRefreshing(false);
-            if(result.equals("ok")) {
-                data0 = new ArrayList<>();
-                for (int j = 0; j < name0.size(); j++) {
-                    data0.add(new DataModel(number0.get(j), name0.get(j), latitude0.get(j), longitude0.get(j), item0.get(j), description0.get(j), itemid0.get(j)));
-                }
-
-                adapter0 = new CustomAdapter(data0);
-                recyclerView0.setAdapter(adapter0);
-            }
-            else{
-                Snackbar.make(findViewById(R.id.TabView),"Please try again",Snackbar.LENGTH_LONG).show();
-            }
-        }
     }
 
     class OpenDonations extends AsyncTask<String, String, String> {
@@ -568,6 +476,10 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
     class MyDonations extends AsyncTask<String, String, String> {
         protected void onPreExecute() {
+            name3.clear();
+            item3.clear();
+            description3.clear();
+            itemid3.clear();
         }
 
         @Override
@@ -629,7 +541,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         @Override
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
-            String link0 = "http://" + getString(R.string.website) + "/close_donations", line0;
+            String link0 = "http://" + getString(R.string.website) + "/close_donation", line0;
             try {
                 String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
                         + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
@@ -673,6 +585,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 });
                 alertDialogBuilder3.show();
             }
+            dialog3.dismiss();
         }
     }
 
@@ -708,6 +621,42 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
             reply = sb.substring(0, sb.length() - 2);
         }
         return reply.toString();
+    }
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.dialogbutton:
+                if (editText3.getText().length() == 6) {
+                    Log.i("jebin",secretnumber3+editText3.toString());
+                    new CloseDonations().execute(secretnumber3, editText3.getText().toString());
+                }
+                else{
+                    Snackbar.make(findViewById(R.id.TabView),"Check the code",Snackbar.LENGTH_LONG).show();
+                }
+                break;
+            default:
+                startActivity(new Intent(AllNotifications.this, ItemSelectionActivity.class));
+                finish();
+                break;
+        }
+    }
+    @Override
+    public void onStop(){
+        SharedPreferences.Editor edit=sp.edit();
+        edit.putBoolean("AllNotifications",false);
+        edit.apply();
+        super.onStop();
+    }
+    public void onPause(){
+        SharedPreferences.Editor edit=sp.edit();
+        edit.putBoolean("AllNotifications",false);
+        edit.apply();
+        super.onPause();
+    }
+    public void onResume(){
+        SharedPreferences.Editor edit=sp.edit();
+        edit.putBoolean("AllNotifications",true);
+        edit.apply();
+        super.onStop();
     }
 }
 

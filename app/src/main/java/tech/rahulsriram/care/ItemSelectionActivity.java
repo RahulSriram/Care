@@ -1,27 +1,19 @@
 package tech.rahulsriram.care;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationServices;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -42,6 +34,9 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_selection);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
 
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
@@ -165,5 +160,24 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
                 Snackbar.make(findViewById(R.id.ItemSelectionLayout), "Please try again", Snackbar.LENGTH_LONG).show();
             }
         }
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.onsetting, menu);
+        return true;
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                startActivity(new Intent(ItemSelectionActivity.this,AllNotifications.class));
+                finish();
+                break;
+        }
+        return false;
+    }
+    public void onBackPressed(){
+        startActivity(new Intent(ItemSelectionActivity.this,AllNotifications.class));
+        finish();
+        super.onBackPressed();
     }
 }
