@@ -226,7 +226,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 String selectedName2 = (String) textDescription2.getText();
                 for(int i=0;i<description2.size();i++) {
                     if (selectedName2.equals(description2.get(i))) {
-                        secretnumber3=itemid2.get(i);
+//                        secretnumber3=itemid2.get(i);
                         la = latitude2.get(i);
                         lo = longitude2.get(i);
                         SharedPreferences.Editor editor=sp.edit();
@@ -276,6 +276,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 String selectedName3 = (String) textDescription3.getText();
                 for(int i=0;i<description3.size();i++) {
                     if (selectedName3.equals(description3.get(i))) {
+                        secretnumber3=itemid3.get(i);
 //                        la = latitude3.get(i);
 //                        lo = longitude3.get(i);
                         SharedPreferences.Editor editor=sp.edit();
@@ -290,8 +291,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                         break;
                     }
                 }
-                startActivity(new Intent(AllNotifications.this,Details.class));
-                finish();
+//                startActivity(new Intent(AllNotifications.this,Details.class));
+//                finish();
+                dialog3.show();
             }
         }
     }

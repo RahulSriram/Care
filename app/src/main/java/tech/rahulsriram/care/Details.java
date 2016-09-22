@@ -247,7 +247,7 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
                 callbutton.setVisibility(View.VISIBLE);
 
                 Verify.setEnabled(true);
-                Verify.setVisibility(View.VISIBLE);
+                Verify.setVisibility(View.GONE);
 
                 new confirm().execute("accept");
                 break;
@@ -258,7 +258,7 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
                 if(sp.getBoolean("acceptbutton",false)) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     if(sp.getString("number","").length()>9) {
-                        callIntent.setData(Uri.parse("tel:" + sp.getString("number", "")));
+                        callIntent.setData(Uri.parse("tel:" + sp.getString("tempusernumber1", "")));
                     }
                     if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                         // TODO: Consider calling
