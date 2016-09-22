@@ -30,7 +30,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
 /**
  * Created by jebineinstein on 29/8/16.
@@ -55,17 +54,9 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
 
     Button button3;
 
-    ArrayList<String> name3 = new ArrayList<>();
-    ArrayList<String> description3 = new ArrayList<>();
-    ArrayList<String> item3 = new ArrayList<>();
-    ArrayList<String> number3 = new ArrayList<>();
-    ArrayList<String> latitude3 = new ArrayList<>();
-    ArrayList<String> longitude3 = new ArrayList<>();
-    ArrayList<String> itemid3 = new ArrayList<>();
-
     TextView text1, text2, text3, text4, text5;
 
-    Button button,callbutton,Verify;
+    Button button,callbutton,Verify,Cancelbutton;
     FloatingActionButton map;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +67,6 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
         getSupportActionBar().setHomeButtonEnabled(true);
 
         progressDialog3 = new ProgressDialog(this);
-        progressDialog3.setMessage("Verifying");
         progressDialog3.setCanceledOnTouchOutside(false);
 
         dialog3 = new Dialog(this);
@@ -84,6 +74,21 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
         dialog3.setTitle("Verify...");
         button3=(Button)dialog3.findViewById(R.id.dialogbutton);
         editText3=(EditText)dialog3.findViewById(R.id.dialogedittext);
+
+        Cancelbutton = (Button)findViewById(R.id.cancelbutton);
+        button = (Button) findViewById(R.id.acceptbutton);
+        callbutton = (Button) findViewById(R.id.callbutton);
+        Verify = (Button) findViewById(R.id.verifybutton);
+        map = (FloatingActionButton) findViewById(R.id.mapbutton);
+
+        Cancelbutton.setVisibility(View.GONE);
+        Cancelbutton.setEnabled(false);
+        callbutton.setVisibility(View.GONE);
+        callbutton.setEnabled(false);
+        button.setVisibility(View.GONE);
+        button.setEnabled(false);
+        Verify.setVisibility(View.GONE);
+        Verify.setEnabled(false);
 
         alertDialogBuilder3 = new AlertDialog.Builder(this);
 
@@ -112,53 +117,162 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
         text1 = (TextView) findViewById(R.id.detailtext4);
         text2 = (TextView) findViewById(R.id.detailtext5);
         text3 = (TextView) findViewById(R.id.detailtext6);
-        if (!number1.equals(sp.getString("number", ""))) {
+        /*if (number1.equals(sp.getString("number", ""))) {
 
-            button = (Button) findViewById(R.id.detailsbutton);
-            assert button != null;
-            button.setEnabled(true);
+            Log.i("jebin",AllNotifications.gettabname);
 
-            callbutton = (Button) findViewById(R.id.callbutton);
-            assert callbutton != null;
-//            callbutton.setEnabled(true);
-            callbutton.setVisibility(View.GONE);
-            callbutton.setEnabled(false);
-
-            Verify = (Button) findViewById(R.id.verifybutton);
-            assert Verify != null;
-//            Verify.setEnabled(true);
-            Verify.setVisibility(View.GONE);
-            Verify.setEnabled(false);
-
-            SharedPreferences.Editor edit=sp.edit();
-            edit.putBoolean("acceptbutton",true);
-            edit.apply();
-        } else {
-            button = (Button) findViewById(R.id.detailsbutton);
             assert button != null;
             button.setVisibility(View.GONE);
             button.setEnabled(false);
 
-            callbutton = (Button) findViewById(R.id.callbutton);
             assert callbutton != null;
             callbutton.setVisibility(View.GONE);
             callbutton.setEnabled(false);
 
-            Verify = (Button) findViewById(R.id.verifybutton);
             assert Verify != null;
-            Verify.setVisibility(View.GONE);
-            Verify.setEnabled(false);
+            Verify.setVisibility(View.VISIBLE);
+            Verify.setEnabled(true);
+
+            assert map != null;
+            map.setClickable(true);
+            map.setVisibility(View.GONE);
 
             SharedPreferences.Editor edit=sp.edit();
             edit.putBoolean("acceptbutton",false);
             edit.apply();
+        } else if((sp.getString("tempusernumber1","")).equals(sp.getString(name1+number1,""))){
+
+            Log.i("jebin",AllNotifications.gettabname);
+
+            assert button != null;
+            button.setVisibility(View.GONE);
+            button.setEnabled(false);
+
+            assert callbutton != null;
+            callbutton.setVisibility(View.VISIBLE);
+            callbutton.setEnabled(true);
+
+            assert Verify != null;
+            Verify.setVisibility(View.GONE);
+            Verify.setEnabled(false);
+
+            assert map != null;
+            map.setVisibility(View.VISIBLE);
+            map.setEnabled(true);
+        }
+        else{
+
+            Log.i("jebin",AllNotifications.gettabname);
+
+            assert button != null;
+            button.setVisibility(View.VISIBLE);
+            button.setEnabled(true);
+
+            assert callbutton != null;
+            callbutton.setVisibility(View.GONE);
+            callbutton.setEnabled(false);
+
+            assert Verify != null;
+            Verify.setVisibility(View.GONE);
+            Verify.setEnabled(false);
+
+            assert map != null;
+            map.setVisibility(View.GONE);
+            map.setEnabled(false);
+
+            SharedPreferences.Editor edit=sp.edit();
+            edit.putBoolean("acceptbutton",true);
+            edit.apply();
+        }*/
+
+        if ((AllNotifications.gettabname.equals("notification"))&&(!(sp.getString("tempusernumber1","")).equals(sp.getString("number","")))) {
+
+            Log.i("jebin",AllNotifications.gettabname);
+
+            assert button != null;
+            button.setVisibility(View.VISIBLE);
+            button.setEnabled(true);
+
+            assert callbutton != null;
+            callbutton.setVisibility(View.GONE);
+            callbutton.setEnabled(false);
+
+            assert Verify != null;
+            Verify.setVisibility(View.GONE);
+            Verify.setEnabled(true);
+
+            assert map != null;
+            map.setClickable(true);
+            map.setVisibility(View.GONE);
+
+            assert Cancelbutton != null;
+            Cancelbutton.setVisibility(View.GONE);
+            Cancelbutton.setEnabled(false);
+
+//            SharedPreferences.Editor edit=sp.edit();
+//            edit.putBoolean("acceptbutton",false);
+//            edit.apply();
+        } else if(AllNotifications.gettabname.equals("accepteddonations")){
+
+            Log.i("jebin",AllNotifications.gettabname);
+
+            assert button != null;
+            button.setVisibility(View.GONE);
+            button.setEnabled(false);
+
+            assert callbutton != null;
+            callbutton.setVisibility(View.VISIBLE);
+            callbutton.setEnabled(true);
+
+            assert Verify != null;
+            Verify.setVisibility(View.GONE);
+            Verify.setEnabled(false);
+
+            assert map != null;
+            map.setVisibility(View.VISIBLE);
+            map.setEnabled(true);
+
+            assert Cancelbutton != null;
+//            Cancelbutton.setVisibility(View.VISIBLE);
+//            Cancelbutton.setEnabled(true);
+            Cancelbutton.setVisibility(View.GONE);
+            Cancelbutton.setEnabled(false);
+        }
+        else if(AllNotifications.gettabname.equals("mydonations")){
+
+            Log.i("jebin",AllNotifications.gettabname);
+
+            assert button != null;
+            button.setVisibility(View.GONE);
+            button.setEnabled(false);
+
+            assert callbutton != null;
+            callbutton.setVisibility(View.GONE);
+            callbutton.setEnabled(false);
+
+            assert Verify != null;
+            Verify.setVisibility(View.VISIBLE);
+            Verify.setEnabled(true);
+
+            assert map != null;
+            map.setVisibility(View.GONE);
+            map.setEnabled(false);
+
+            assert Cancelbutton != null;
+            Cancelbutton.setVisibility(View.GONE);
+            Cancelbutton.setEnabled(false);
+
+//            SharedPreferences.Editor edit=sp.edit();
+//            edit.putBoolean("acceptbutton",true);
+//            edit.apply();
         }
 
-        map = (FloatingActionButton) findViewById(R.id.mapbutton);
-        assert map != null;
-        map.setClickable(false);
-        map.setAlpha(.5f);
+//        map = (FloatingActionButton) findViewById(R.id.mapbutton);
+//        assert map != null;
+//        map.setClickable(false);
+//        map.setAlpha(.5f);
 
+        Cancelbutton.setOnClickListener(this);
         button.setOnClickListener(this);
         callbutton.setOnClickListener(this);
         map.setOnClickListener(this);
@@ -238,23 +352,42 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
 
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.detailsbutton:
-                map.setAlpha((float) 1.0);
+            case R.id.acceptbutton:
 
-                map.setClickable(true);
+                SharedPreferences.Editor edit=sp.edit();
+                edit.putString(name1+number1,number1);
+                edit.apply();
+
+                button.setEnabled(false);
+                button.setVisibility(View.GONE);
+
+                map.setEnabled(true);
+                map.setVisibility(View.VISIBLE);
 
                 callbutton.setEnabled(true);
                 callbutton.setVisibility(View.VISIBLE);
 
-                Verify.setEnabled(true);
+//                Cancelbutton.setEnabled(true);
+//                Cancelbutton.setVisibility(View.VISIBLE);
+
+                Cancelbutton.setVisibility(View.GONE);
+                Cancelbutton.setEnabled(false);
+
+                Verify.setEnabled(false);
                 Verify.setVisibility(View.GONE);
 
                 new confirm().execute("accept");
+
                 break;
+
             case R.id.mapbutton:
+
                 new confirm().execute("path");
+
                 break;
+
             case R.id.callbutton:
+
                 if(sp.getBoolean("acceptbutton",false)) {
                     Intent callIntent = new Intent(Intent.ACTION_CALL);
                     if(sp.getString("number","").length()>9) {
@@ -273,14 +406,32 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
                     startActivity(callIntent);
                     break;
                 }
+
             case R.id.verifybutton:
                 dialog3.show();
                 break;
+
+            /*case R.id.cancelbutton:
+                alertDialogBuilder3.setMessage("Are you Sure");
+                alertDialogBuilder3.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        new CancelDonations().execute(sp.getString("tempuseritemid1",""));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialogBuilder3.show();
+                break;*/
         }
     }
 
     class CloseDonations extends AsyncTask<String, String, String> {
         protected void onPreExecute() {
+            progressDialog3.setMessage("Verifying");
             progressDialog3.show();
         }
 
@@ -288,7 +439,7 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
         protected String doInBackground(String... arg0) {
             StringBuilder sb = new StringBuilder();
             Log.i("jebin",arg0[0]+arg0[1]);
-            String link0 = "http://" + getString(R.string.website) + "/close_donation", line0;
+            String link0 = "http://" + getString(R.string.website) + "/close_donation", line0; ///cancel_donation
             try {
                 String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
                         + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
@@ -334,4 +485,68 @@ public class Details extends AppCompatActivity implements View.OnClickListener {
             dialog3.dismiss();
         }
     }
+
+    class CancelDonations extends AsyncTask<String, String, String> {
+        protected void onPreExecute() {
+            progressDialog3.setMessage("Cancelling");
+            progressDialog3.show();
+        }
+
+        @Override
+        protected String doInBackground(String... arg0) {
+            StringBuilder sb = new StringBuilder();
+            Log.i("jebin",arg0[0]);
+            String link0 = "http://" + getString(R.string.website) + "/cancel_donation", line0;
+            try {
+                String data0 = "id=" + URLEncoder.encode(sp.getString("id", ""), "UTF-8")
+                        + "&number=" + URLEncoder.encode(sp.getString("number", ""), "UTF-8")
+                        + "&donationId=" + URLEncoder.encode(arg0[0],"UTF-8");
+                URL url = new URL(link0);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+                writer.write(data0);
+                writer.flush();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                while ((line0 = reader.readLine()) != null) {
+                    sb.append(line0);
+                }
+                conn.disconnect();
+            } catch (Exception e) {
+                return "error";
+            }
+            return sb.toString();
+        }
+
+        protected void onPostExecute(String result) {
+            progressDialog3.dismiss();
+            Log.i("jebin",result);
+            if(result.equals("ok")) {
+                alertDialogBuilder3.setMessage("Cancelled");
+                alertDialogBuilder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialogBuilder3.show();
+            }
+            else{
+                alertDialogBuilder3.setMessage("Try Again");
+                alertDialogBuilder3.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton("", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                });
+                alertDialogBuilder3.show();
+            }
+            dialog3.dismiss();
+        }
+    }
+
 }

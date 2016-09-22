@@ -101,6 +101,8 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 
     Button button3;
 
+    public static String gettabname;
+
     NotificationManager mNotificationManager;
 
     public static Activity allNotifications;
@@ -220,6 +222,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         @Override
         public void onClick(View v) {
             if(tabHost.getCurrentTabTag().equals("accepteddonations")){
+                gettabname=tabHost.getCurrentTabTag();
                 int selectedItemPosition2 = recyclerView2.getChildPosition(v);
                 RecyclerView.ViewHolder viewHolder2 = recyclerView2.findViewHolderForPosition(selectedItemPosition2);
                 TextView textDescription2 = (TextView) viewHolder2.itemView.findViewById(R.id.textDescription);
@@ -246,6 +249,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
 //                dialog3.show();
             }
             else if(tabHost.getCurrentTabTag().equals("notification")){
+                gettabname=tabHost.getCurrentTabTag();
                 int selectedItemPosition1 = recyclerView1.getChildPosition(v);
                 RecyclerView.ViewHolder viewHolder1 = recyclerView1.findViewHolderForPosition(selectedItemPosition1);
                 TextView textDescription1 = (TextView) viewHolder1.itemView.findViewById(R.id.textDescription);
@@ -270,6 +274,7 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                 finish();
             }
             else if(tabHost.getCurrentTabTag().equals("mydonations")){
+                gettabname=tabHost.getCurrentTabTag();
                 int selectedItemPosition3 = recyclerView3.getChildPosition(v);
                 RecyclerView.ViewHolder viewHolder3 = recyclerView3.findViewHolderForPosition(selectedItemPosition3);
                 TextView textDescription3 = (TextView) viewHolder3.itemView.findViewById(R.id.textDescription);
@@ -291,9 +296,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
                         break;
                     }
                 }
-//                startActivity(new Intent(AllNotifications.this,Details.class));
-//                finish();
-                dialog3.show();
+                startActivity(new Intent(AllNotifications.this,Details.class));
+                finish();
+//                dialog3.show();
             }
         }
     }

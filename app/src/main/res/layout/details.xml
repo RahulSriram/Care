@@ -16,7 +16,7 @@
         android:textSize="20dp"
         android:id="@+id/detailtext1"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"/>
 
     <TextView
@@ -27,7 +27,7 @@
         android:textSize="20dp"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/detailtext1"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"/>
 
     <TextView
@@ -38,7 +38,7 @@
         android:id="@+id/detailtext3"
         android:layout_gravity="center_horizontal"
         android:layout_below="@+id/detailtext2"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="10dp"/>
 
     <TextView
@@ -49,7 +49,7 @@
         android:id="@+id/detailtext4"
         android:layout_gravity="center_horizontal"
         android:layout_toRightOf="@id/detailtext1"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 
     <TextView
         android:layout_width="fill_parent"
@@ -60,7 +60,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_toRightOf="@id/detailtext2"
         android:layout_below="@id/detailtext4"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 
     <TextView
         android:layout_width="fill_parent"
@@ -71,7 +71,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_toRightOf="@id/detailtext3"
         android:layout_below="@id/detailtext5"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="20dp"/>
 
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
@@ -92,21 +92,10 @@
         android:layout_height="wrap_content"
         android:text="Accept Donation"
         android:textSize="20dp"
-        android:id="@+id/detailsbutton"
-        android:layout_above="@+id/mapbutton"
-        android:layout_toStartOf="@+id/mapbutton"
-        android:layout_marginBottom="75dp" />
-
-    <Button
-        android:text="Make Call"
-        android:textSize="20dp"
-        android:id="@+id/callbutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="17dp"
-        android:layout_below="@+id/detailsbutton"
-        android:layout_above="@+id/verifybutton"
-        android:layout_toEndOf="@+id/detailtext3" />
+        android:id="@+id/acceptbutton"
+        android:layout_marginTop="180dp"
+        android:layout_below="@+id/detailtext6"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:text="Verify"
@@ -114,6 +103,27 @@
         android:id="@+id/verifybutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/detailsbutton"
+        android:layout_marginTop="250dp"
+        android:layout_below="@+id/detailtext6"
         android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Make Call"
+        android:textSize="20dp"
+        android:id="@+id/callbutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:layout_below="@+id/detailtext6"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Cancel Donations"
+        android:textSize="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="180dp"
+        android:layout_below="@+id/detailtext6"
+        android:id="@+id/cancelbutton"
+        android:layout_centerHorizontal="true"/>
 </RelativeLayout>

@@ -1,11 +1,14 @@
 package tech.rahulsriram.care;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,7 +31,8 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
     private String description, finalDonate;
     private EditText itemDescription;
     private SharedPreferences sp;
-
+    private ProgressDialog progressDialog;
+    private AlertDialog.Builder alertDialogBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,10 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
         itemDescription = (EditText) findViewById(R.id.itemDescription);
+
+        progressDialog = new ProgressDialog(this);
+
+        alertDialogBuilder = new AlertDialog.Builder(this);
 
         Switch homeFoodSwitch = (Switch) findViewById(R.id.homeFoodSwitch);
         homeFoodSwitch.setOnCheckedChangeListener(this);
@@ -126,6 +134,13 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
 
     class DonateTask extends AsyncTask<Void, Void, String> {
         @Override
+
+        protected void onPreExecute(){
+            progressDialog.setMessage("Requesting");
+            progressDialog.show();
+            alertDialogBuilder.show();
+        }
+
         protected String doInBackground(Void... params) {
             StringBuilder sb = new StringBuilder();
 
@@ -154,10 +169,27 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            progressDialog.dismiss();
             if(result.equals("ok")) {
-                Snackbar.make(findViewById(R.id.ItemSelectionLayout), "Done", Snackbar.LENGTH_LONG).show();
+                alertDialogBuilder.setMessage("Item Added");
+                alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialogBuilder.show();
+//                Snackbar.make(findViewById(R.id.ItemSelectionLayout), "Done", Snackbar.LENGTH_LONG).show();
             } else {
-                Snackbar.make(findViewById(R.id.ItemSelectionLayout), "Please try again", Snackbar.LENGTH_LONG).show();
+                alertDialogBuilder.setMessage("Connection Problem");
+                alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                alertDialogBuilder.show();
+//                Snackbar.make(findViewById(R.id.ItemSelectionLayout), "Please try again", Snackbar.LENGTH_LONG).show();
             }
         }
     }
