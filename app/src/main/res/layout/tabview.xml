@@ -27,7 +27,7 @@
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
@@ -48,7 +48,7 @@
                     <android.support.design.widget.FloatingActionButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_menu_send"
+                        android:src="@drawable/donate1"
                         android:id="@+id/donateButton1"
                         android:tint="#ffffff"
                         app:backgroundTint="#3f51b4"
@@ -75,7 +75,7 @@
                     <android.support.design.widget.FloatingActionButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_menu_send"
+                        android:src="@drawable/donate1"
                         android:id="@+id/donateButton2"
                         android:tint="#ffffff"
                         app:backgroundTint="#3f51b4"
@@ -91,7 +91,8 @@
                     android:id="@+id/linearLayout3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:background="@drawable/donatescreen">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/my_recycler_view3"
@@ -102,7 +103,7 @@
                     <android.support.design.widget.FloatingActionButton
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_menu_send"
+                        android:src="@drawable/donate1"
                         android:id="@+id/donateButton3"
                         android:tint="#ffffff"
                         app:backgroundTint="#3f51b4"

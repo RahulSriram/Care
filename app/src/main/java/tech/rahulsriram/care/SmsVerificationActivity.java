@@ -5,10 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -45,7 +44,16 @@ public class SmsVerificationActivity extends AppCompatActivity {
         resendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new RequestSms(SmsVerificationActivity.this).execute();
+                String code = smsCode.getText().toString();
+
+                if (smsCode.hasFocus()) {
+                    smsCode.clearFocus();
+                }
+
+                if (!code.isEmpty()) {
+                    new Registration(SmsVerificationActivity.this, smsCode.getText().toString()).execute();
+                }
+
             }
         });
     }

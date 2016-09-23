@@ -7,6 +7,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+
     <style name="LargeTitleTheme">
         <item name="android:windowTitleSize">40dip</item>
     </style>

@@ -171,7 +171,7 @@ public class ItemSelectionActivity  extends AppCompatActivity implements Compoun
             super.onPostExecute(result);
             progressDialog.dismiss();
             if(result.equals("ok")) {
-                alertDialogBuilder.setMessage("Item Added");
+                alertDialogBuilder.setMessage("Item Added Thanks to you");
                 alertDialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

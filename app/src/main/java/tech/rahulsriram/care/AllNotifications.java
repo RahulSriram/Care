@@ -40,6 +40,8 @@ import java.util.ArrayList;
 public class AllNotifications extends AppCompatActivity implements GestureDetector.OnGestureListener, View.OnClickListener {
     public static View.OnClickListener myOnClickListener;
 
+    float lastX;
+
     static RecyclerView.Adapter adapter1;
     RecyclerView.LayoutManager layoutManager1;
     static RecyclerView recyclerView1;
@@ -111,6 +113,9 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tabview);
 
+        View someView = findViewById(R.id.TabView);
+        View root = someView.getRootView();
+
         sp = getSharedPreferences("Care", MODE_PRIVATE);
 
         allNotifications=this;
@@ -163,21 +168,33 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
         TabHost.TabSpec tabSpec;
 
         if(sp.getBoolean("volunteer",false)) {
+            root.setBackgroundColor(getResources().getColor(R.color.White));
             tabSpec = tabHost.newTabSpec("notification");
             tabSpec.setContent(R.id.linearLayout1);
-            tabSpec.setIndicator("Open Donations");
+//            tabSpec.setIndicator("Open Donations");
+            tabSpec.setIndicator("", getResources().getDrawable(R.drawable.opendonations));
             tabHost.addTab(tabSpec);
 
             tabSpec = tabHost.newTabSpec("accepteddonations");
             tabSpec.setContent(R.id.linearLayout2);
-            tabSpec.setIndicator("Accepted Donations");
+//            tabSpec.setIndicator("Accepted Donations");
+            tabSpec.setIndicator("", getResources().getDrawable(R.drawable.accepteddonations));
+            tabHost.addTab(tabSpec);
+
+            tabSpec = tabHost.newTabSpec("mydonations");
+            tabSpec.setContent(R.id.linearLayout3);
+//        tabSpec.setIndicator("My Donations");
+            tabSpec.setIndicator("", getResources().getDrawable(R.drawable.mydonate));
             tabHost.addTab(tabSpec);
         }
-        tabSpec = tabHost.newTabSpec("mydonations");
-        tabSpec.setContent(R.id.linearLayout3);
-        tabSpec.setIndicator("My Donations");
-        tabHost.addTab(tabSpec);
-
+        else {
+            root.setBackgroundColor(getResources().getColor(R.color.White));
+            tabSpec = tabHost.newTabSpec("mydonations");
+            tabSpec.setContent(R.id.linearLayout3);
+//        tabSpec.setIndicator("My Donations");
+            tabSpec.setIndicator("", getResources().getDrawable(R.drawable.mydonate));
+            tabHost.addTab(tabSpec);
+        }
         tabHost.setCurrentTab(0);
 
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary),
@@ -316,8 +333,56 @@ public class AllNotifications extends AppCompatActivity implements GestureDetect
     }
 
     public boolean onTouchEvent(MotionEvent m) {
-        return gestureDetector.onTouchEvent(m);
+//        lastX = m.getX();
+//        Log.i("jebin", String.valueOf(lastX));
+//        switch (m.getAction()) {
+//             when user first touches the screen to swap
+//            case MotionEvent.ACTION_DOWN: {
+//                lastX = m.getX();
+//                Log.i("jebin", String.valueOf(lastX));
+//                break;
+//            }
+//            case MotionEvent.ACTION_UP: {
+//                float currentX = m.getX();
+//
+//                 if left to right swipe on screen
+//                if (lastX < currentX) {
+//
+//                    switchTabs(false);
+//                }
+//
+//                 if right to left swipe on screen
+//                if (lastX > currentX) {
+//                    switchTabs(true);
+//                }
+//
+//                break;
+//            }
+//        }
+        return false;
+//        return gestureDetector.onTouchEvent(m);
     }
+
+//    public void switchTabs(boolean direction) {
+//        if (direction) // true = move left
+//        {
+//            if (tabHost.getCurrentTabTag().equals("notification"))
+//                tabHost.setCurrentTabByTag("accepteddonations");
+//            else if(tabHost.getCurrentTabTag().equals("accepteddonations"))
+//                tabHost.setCurrentTabByTag("mydonations");
+//            else if(tabHost.getCurrentTabTag().equals("accepteddonations"))
+//                tabHost.setCurrentTabByTag("notification");
+//        } else
+//        // move right
+//        {
+//            if (tabHost.getCurrentTabTag().equals("notification"))
+//                tabHost.setCurrentTabByTag("accepteddonations");
+//            else if(tabHost.getCurrentTabTag().equals("accepteddonations"))
+//                tabHost.setCurrentTabByTag("mydonations");
+//            else if(tabHost.getCurrentTabTag().equals("accepteddonations"))
+//                tabHost.setCurrentTabByTag("notification");
+//        }
+//    }
 
     @Override
     public boolean onDown(MotionEvent e) {

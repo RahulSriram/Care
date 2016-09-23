@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,6 +9,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/White"
     android:id="@+id/ItemSelectionLayout"
     tools:context="tech.rahulsriram.care.ItemSelectionActivity">
 
@@ -17,7 +19,7 @@
         android:layout_width="100dp"
         android:layout_height="75dp"
         android:id="@+id/homeFoodImage"
-        android:src="@drawable/home_food"
+        android:src="@drawable/homemadefood"
         android:layout_alignParentTop="true"
         android:contentDescription="@string/home_made_food"
         android:layout_alignParentLeft="true" />
@@ -28,7 +30,7 @@
         android:layout_width="100dp"
         android:layout_height="75dp"
         android:id="@+id/packedFoodImage"
-        android:src="@drawable/packed_food"
+        android:src="@drawable/packedfood"
         android:layout_below="@+id/homeFoodImage"
         android:contentDescription="@string/packed_food"
         android:layout_alignParentLeft="true" />
@@ -65,6 +67,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/home_made_food"
+        android:textSize="20dp"
         android:id="@+id/homeFoodSwitch"
         android:layout_alignTop="@+id/homeFoodImage"
         android:layout_above="@+id/packedFoodImage"
@@ -75,6 +78,7 @@
         android:layout_alignParentRight="true" />
 
     <Switch
+        android:textSize="20dp"
         android:layout_marginStart="@dimen/item_switch_marginStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -89,6 +93,7 @@
         android:layout_toRightOf="@+id/homeFoodImage" />
 
     <Switch
+        android:textSize="20dp"
         android:layout_marginStart="@dimen/item_switch_marginStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -103,6 +108,7 @@
         android:layout_toRightOf="@+id/clothesImage" />
 
     <Switch
+        android:textSize="20dp"
         android:layout_marginStart="@dimen/item_switch_marginStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -120,7 +126,7 @@
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_menu_send"
+        android:src="@drawable/donate1"
         android:id="@+id/donateButton"
         android:tint="#ffffff"
         app:backgroundTint="#3f51b4"

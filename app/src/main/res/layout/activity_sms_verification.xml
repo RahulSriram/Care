@@ -23,7 +23,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Resend Code"
+        android:text="Next"
         android:id="@+id/resend_code_button"
         android:layout_below="@+id/sms_code"
         android:layout_centerHorizontal="true"

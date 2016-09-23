@@ -115,7 +115,7 @@ public class ConnectivityChangeReceiver extends BroadcastReceiver {
                 NotificationManager mNotificationManager = (NotificationManager) context.getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
                 PendingIntent pi = PendingIntent.getActivity(context.getApplicationContext(), 0, intentI, 0);
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context.getApplicationContext());
-                mBuilder.setSmallIcon(R.drawable.notification_icon);
+                mBuilder.setSmallIcon(R.mipmap.rrrrr);
                 mBuilder.setContentTitle("Notification");
                 if (!sp.getBoolean("AllNotifications",false)) {
                     Log.i("jebin","fdgkjfkgj");
